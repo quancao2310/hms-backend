@@ -4,16 +4,101 @@ services:
     environment:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: hms
     ports:
       - "5432:5432"
     volumes:
       - postgres:/var/lib/postgresql/data
+    networks:
+      - hms-network
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U username"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 15s
 
   zipkin:
     image: openzipkin/zipkin
     ports:
       - "9411:9411"
+    networks:
+      - hms-network
+
+  config-server:
+    build:
+      context: ./services/config-server
+      target: dev
+    ports:
+      - "8888:8888"
+    networks:
+      - hms-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail http://localhost:8888/actuator/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  eureka-server:
+    build:
+      context: ./services/eureka-server
+      target: dev
+    ports:
+      - "8761:8761"
+    environment:
+      CONFIG_SERVER_URI: http://config-server:8888
+      EUREKA_INSTANCE_HOSTNAME: eureka-server
+    depends_on:
+      config-server:
+        condition: service_healthy
+    networks:
+      - hms-network
+
+  gateway:
+    build:
+      context: ./services/gateway
+      target: dev
+    ports:
+      - "8080:8080"
+    environment:
+      CONFIG_SERVER_URI: http://config-server:8888
+      EUREKA_SERVER_URI: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: gateway
+    depends_on:
+      config-server:
+        condition: service_healthy
+    networks:
+      - hms-network
+
+  patient-service:
+    build:
+      context: ./services/patient
+      target: dev
+    ports:
+      - "8081:8081"
+    environment:
+      CONFIG_SERVER_URI: http://config-server:8888
+      EUREKA_SERVER_URI: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: patient-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hms
+    depends_on:
+      postgres:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    volumes:
+      - ./services/patient/src:/app/src
+    networks:
+      - hms-network
 
 volumes:
   postgres:
+
+networks:
+  hms-network:
