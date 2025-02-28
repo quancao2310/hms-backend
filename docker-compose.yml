@@ -57,6 +57,7 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+        restart: true
     networks:
       - hms-network
 
@@ -73,12 +74,13 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+        restart: true
     networks:
       - hms-network
 
   patient-service:
     build:
-      context: ./services/patient
+      context: ./services/patient-service
       target: dev
     ports:
       - "8081:8081"
@@ -90,10 +92,52 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+        restart: true
       config-server:
         condition: service_healthy
-    volumes:
-      - ./services/patient/src:/app/src
+        restart: true
+    networks:
+      - hms-network
+
+  staff-service:
+    build:
+      context: ./services/staff-service
+      target: dev
+    ports:
+      - "8082:8082"
+    environment:
+      CONFIG_SERVER_URI: http://config-server:8888
+      EUREKA_SERVER_URI: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: staff-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hms
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+      config-server:
+        condition: service_healthy
+        restart: true
+    networks:
+      - hms-network
+
+  appointment-service:
+    build:
+      context: ./services/appointment-service
+      target: dev
+    ports:
+      - "8083:8083"
+    environment:
+      CONFIG_SERVER_URI: http://config-server:8888
+      EUREKA_SERVER_URI: http://eureka-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: appointment-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hms
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+      config-server:
+        condition: service_healthy
+        restart: true
     networks:
       - hms-network
 

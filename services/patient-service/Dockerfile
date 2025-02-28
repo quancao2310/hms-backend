@@ -9,9 +9,8 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
 
 # Stage: dev
 FROM eclipse-temurin:21-jdk-alpine AS dev
-RUN apk update && apk add curl
 WORKDIR /app
-EXPOSE 8888
+EXPOSE 8081
 COPY --from=base /app/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
@@ -24,9 +23,8 @@ RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
 # Stage: production
 FROM bellsoft/liberica-openjre-debian:21-cds AS production
-RUN apk update && apk add curl
 WORKDIR /app
-EXPOSE 8888
+EXPOSE 8081
 # Copy the extracted jar contents from the prepare container into the working directory in the runtime container
 ARG EXTRACTED=/builder/extracted
 COPY --from=prepare-production ${EXTRACTED}/dependencies/ ./
@@ -39,5 +37,3 @@ RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefres
 # This jar only contains application code and references to the extracted jar files
 # This layout is efficient to start up and CDS friendly
 ENTRYPOINT ["java", "-XX:SharedArchiveFile=application.jsa", "-jar", "app.jar"]
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl --fail http://localhost:8888/actuator/health || exit 1

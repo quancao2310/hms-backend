@@ -1,15 +1,18 @@
 # Stage: base
-FROM maven:3.9.9-eclipse-temurin-21 AS base
+FROM eclipse-temurin:21-jdk-alpine AS base
 WORKDIR /app
-EXPOSE 8080
-COPY pom.xml .
-RUN mvn dependency:go-offline --fail-never
+
+COPY .mvn/ .mvn
+COPY mvnw* pom.xml ./
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
 
 # Stage: dev
-FROM base AS dev
-CMD ["mvn", "spring-boot:run"]
+FROM eclipse-temurin:21-jdk-alpine AS dev
+WORKDIR /app
+EXPOSE 8080
+COPY --from=base /app/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # Stage: prepare-production
 FROM bellsoft/liberica-openjre-debian:21-cds AS prepare-production
@@ -21,6 +24,7 @@ RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 # Stage: production
 FROM bellsoft/liberica-openjre-debian:21-cds AS production
 WORKDIR /app
+EXPOSE 8080
 # Copy the extracted jar contents from the prepare container into the working directory in the runtime container
 ARG EXTRACTED=/builder/extracted
 COPY --from=prepare-production ${EXTRACTED}/dependencies/ ./
