@@ -10,9 +10,15 @@
     </parent>
 
     <artifactId>shared-entities</artifactId>
+    <packaging>pom</packaging>
 
     <name>shared-entities</name>
     <description>Shared entities for Hospital Management System</description>
+
+    <modules>
+        <module>external</module>
+        <module>internal</module>
+    </modules>
 
     <dependencies>
         <dependency>

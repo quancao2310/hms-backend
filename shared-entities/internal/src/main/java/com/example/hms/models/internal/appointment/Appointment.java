@@ -1,22 +1,21 @@
-package com.example.hms.models.doctor;
+package com.example.hms.models.internal.appointment;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Doctor {
+public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
