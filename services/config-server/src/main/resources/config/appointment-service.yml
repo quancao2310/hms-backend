@@ -14,11 +14,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  flyway:
-    baseline-on-migrate: true
-    enabled: true
-    baseline-description: "init"
-    baseline-version: 0
-    user: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    table: appointment_service_migration_history

@@ -38,6 +38,7 @@
 
     <modules>
         <module>shared-entities</module>
+        <module>services</module>
     </modules>
 
     <dependencies>
