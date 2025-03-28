@@ -9,10 +9,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>appointment-service</artifactId>
+    <artifactId>patient-facing-service</artifactId>
 
-    <name>appointment-service</name>
-    <description>Appointment Service</description>
+    <name>patient-facing-service</name>
+    <description>Patient Facing Service</description>
 
     <dependencies>
         <dependency>
@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>com.example.hms</groupId>
-            <artifactId>internal-shared-entities</artifactId>
+            <artifactId>external-shared-entities</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -9,10 +9,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>appointment-service</artifactId>
+    <artifactId>medical-record-service</artifactId>
 
-    <name>appointment-service</name>
-    <description>Appointment Service</description>
+    <name>medical-record-service</name>
+    <description>Medical Record Service</description>
 
     <dependencies>
         <dependency>

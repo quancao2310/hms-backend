@@ -16,7 +16,7 @@
     <description>Services for Hospital Management System</description>
 
     <properties>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <spring-cloud.version>2024.0.1</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
@@ -33,6 +33,11 @@
 
     <modules>
         <module>config-server</module>
+        <module>eureka-server</module>
+        <module>gateway</module>
+        <module>patient-facing-service</module>
+        <module>staff-service</module>
+        <module>appointment-service</module>
     </modules>
 
     <dependencies>
