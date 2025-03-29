@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -21,4 +23,10 @@ public class TimeSlot {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    private DayOfWeek date;
+    private LocalDate startTime;
+    private LocalDate endTime;
+
+    private Integer totalMaxAppointment;
 }
