@@ -8,14 +8,18 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: patient-service
-          uri: lb://patient-service
+        - id: patient-facing-service
+          uri: lb://patient-facing-service
           predicates:
             - Path=/api/v1/patients/**
         - id: staff-service
           uri: lb://staff-service
           predicates:
             - Path=/api/v1/staff/**
+        - id: medical-record-service
+          uri: lb://medical-record-service
+          predicates:
+            - Path=/api/v1/medical-records/**
         - id: appointment-service
           uri: lb://appointment-service
           predicates:
