@@ -30,6 +30,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public PatientAccountDTO signUp(SignUpRequestDTO dto) {
+        if (patientAccountRepository.existsByEmail(dto.email())) {
+            throw new DuplicateEmailException();
+        }
 
         PatientAccount patientAccount = patientAccountMapper.toPatientAccount(dto);
         PatientAccount savedPatientAccount = patientAccountRepository.save(patientAccount);
