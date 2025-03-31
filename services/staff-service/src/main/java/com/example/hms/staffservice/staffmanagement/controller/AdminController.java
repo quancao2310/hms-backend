@@ -2,6 +2,7 @@ package com.example.hms.staffservice.staffmanagement.controller;
 
 import com.example.hms.staffservice.staffmanagement.dto.*;
 import com.example.hms.staffservice.staffmanagement.service.AdminService;
+import com.example.hms.staffservice.staffmanagement.util.PaginationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,12 +30,16 @@ public class AdminController {
     
     @Operation(summary = "Get all administrators", description = "Retrieves a paginated list of all administrators")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved list of administrators")
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved list of administrators",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaginatedResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<AdminDTO>> getAllAdmins(
-            @Parameter(description = "Pagination parameters") Pageable pageable) {
-        return ResponseEntity.ok(adminService.getAllAdmins(pageable));
+    public ResponseEntity<PaginatedResponse<AdminDTO>> getAllAdmins(
+        @Parameter(hidden = true) Pageable pageable,
+        @Parameter(description = "Page number (0-based)") @RequestParam(required = false) Integer page,
+        @Parameter(description = "Page size") @RequestParam(required = false) Integer size,
+        @Parameter(description = "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.", example = "fullName,desc") @RequestParam(required = false) String[] sort) {
+        return ResponseEntity.ok(PaginationUtil.toPaginatedResponse(adminService.getAllAdmins(pageable)));
     }
     
     @Operation(summary = "Get administrator by ID", description = "Retrieves a specific administrator by their ID")

@@ -13,6 +13,7 @@ import com.example.hms.staffservice.staffmanagement.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,17 +43,47 @@ public class DoctorService {
     }
     
     @Transactional(readOnly = true)
-    public List<DoctorDTO> getDoctorsByDepartment(String department) {
-        return doctorRepository.findByDepartment(department).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public Page<DoctorDTO> getDoctorsByDepartment(String department, Pageable pageable) {
+        return doctorRepository.findByDepartment(department, pageable)
+                .map(this::convertToDto);
     }
     
     @Transactional(readOnly = true)
-    public List<DoctorDTO> getDoctorsBySpecialization(String specialization) {
-        return doctorRepository.findBySpecializationsContaining(specialization).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public Page<DoctorDTO> getDoctorsBySpecialization(String specialization, Pageable pageable) {
+        return doctorRepository.findBySpecializationsContaining(specialization, pageable)
+                .map(this::convertToDto);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<DoctorDTO> getDoctorsByFullName(String fullName, Pageable pageable) {
+        return doctorRepository.findByFullNameContainingIgnoreCase(fullName, pageable)
+                .map(this::convertToDto);
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<DoctorDTO> getDoctorsWithFilters(String department, String specialization, String fullName, Pageable pageable) {
+        // If no filters are provided, return all doctors
+        if (department == null && specialization == null && fullName == null) {
+            return getAllDoctors(pageable);
+        }
+        
+        // Create a specification that combines all non-null filter criteria
+        Specification<Doctor> spec = Specification.where(null);
+        
+        if (department != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("department"), department));
+        }
+        
+        if (specialization != null) {
+            spec = spec.and((root, query, cb) -> cb.like(root.get("specializations"), "%" + specialization + "%"));
+        }
+        
+        if (fullName != null) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("fullName")), "%" + fullName.toLowerCase() + "%"));
+        }
+        
+        return doctorRepository.findAll(spec, pageable)
+                .map(this::convertToDto);
     }
     
     @Transactional

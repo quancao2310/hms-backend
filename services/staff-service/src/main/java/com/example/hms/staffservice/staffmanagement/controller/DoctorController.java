@@ -3,7 +3,9 @@ package com.example.hms.staffservice.staffmanagement.controller;
 import com.example.hms.staffservice.staffmanagement.dto.DoctorCreationRequest;
 import com.example.hms.staffservice.staffmanagement.dto.DoctorDTO;
 import com.example.hms.staffservice.staffmanagement.dto.DoctorUpdateRequest;
+import com.example.hms.staffservice.staffmanagement.dto.PaginatedResponse;
 import com.example.hms.staffservice.staffmanagement.service.DoctorService;
+import com.example.hms.staffservice.staffmanagement.util.PaginationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,15 +32,24 @@ public class DoctorController {
 
     private final DoctorService doctorService;
     
-    @Operation(summary = "Get all doctors", description = "Retrieves a paginated list of all doctors")
+    @Operation(summary = "Get all doctors", description = "Retrieves a paginated list of all doctors with optional filtering")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved list of doctors",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class)))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaginatedResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<DoctorDTO>> getAllDoctors(
-            @Parameter(description = "Pagination parameters") Pageable pageable) {
-        return ResponseEntity.ok(doctorService.getAllDoctors(pageable));
+    public ResponseEntity<PaginatedResponse<DoctorDTO>> getAllDoctors(
+            @Parameter(hidden = true) Pageable pageable,
+            @Parameter(description = "Page number (0-based)") @RequestParam(required = false) Integer page,
+            @Parameter(description = "Page size") @RequestParam(required = false) Integer size,
+            @Parameter(description = "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.", example = "fullName,desc") @RequestParam(required = false) String[] sort,
+            @Parameter(description = "Filter by department name") @RequestParam(required = false) String department,
+            @Parameter(description = "Filter by specialization") @RequestParam(required = false) String specialization,
+            @Parameter(description = "Filter by full name (case-insensitive, partial match)") @RequestParam(required = false) String fullName) {
+        
+        // Pass all filter parameters to allow simultaneous filtering
+        Page<DoctorDTO> result = doctorService.getDoctorsWithFilters(department, specialization, fullName, pageable);
+        return ResponseEntity.ok(PaginationUtil.toPaginatedResponse(result));
     }
     
     @Operation(summary = "Get doctor by ID", description = "Retrieves a specific doctor by their ID")
@@ -53,28 +64,6 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
     
-    @Operation(summary = "Get doctors by department", description = "Retrieves all doctors in a specific department")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved list of doctors by department",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
-    })
-    @GetMapping("/department/{department}")
-    public ResponseEntity<List<DoctorDTO>> getDoctorsByDepartment(
-            @Parameter(description = "Department name") @PathVariable String department) {
-        return ResponseEntity.ok(doctorService.getDoctorsByDepartment(department));
-    }
-    
-    @Operation(summary = "Get doctors by specialization", description = "Retrieves all doctors with a specific specialization")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved list of doctors by specialization",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
-    })
-    @GetMapping("/specialization")
-    public ResponseEntity<List<DoctorDTO>> getDoctorsBySpecialization(
-            @Parameter(description = "Medical specialization") @RequestParam String specialization) {
-        return ResponseEntity.ok(doctorService.getDoctorsBySpecialization(specialization));
-    }
-
     @Operation(summary = "Create doctor", description = "Creates a new doctor account (Admin access required)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Doctor successfully created"),

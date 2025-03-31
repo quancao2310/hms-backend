@@ -3,7 +3,9 @@ package com.example.hms.staffservice.staffmanagement.controller;
 import com.example.hms.staffservice.staffmanagement.dto.NurseCreationRequest;
 import com.example.hms.staffservice.staffmanagement.dto.NurseDTO;
 import com.example.hms.staffservice.staffmanagement.dto.NurseUpdateRequest;
+import com.example.hms.staffservice.staffmanagement.dto.PaginatedResponse;
 import com.example.hms.staffservice.staffmanagement.service.NurseService;
+import com.example.hms.staffservice.staffmanagement.util.PaginationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,12 +35,21 @@ public class NurseController {
     @Operation(summary = "Get all nurses", description = "Retrieves a paginated list of all nurses")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved list of nurses",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class)))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaginatedResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<NurseDTO>> getAllNurses(
-            @Parameter(description = "Pagination parameters") Pageable pageable) {
-        return ResponseEntity.ok(nurseService.getAllNurses(pageable));
+    public ResponseEntity<PaginatedResponse<NurseDTO>> getAllNurses(
+        @Parameter(hidden = true) Pageable pageable,
+        @Parameter(description = "Page number (0-based)") @RequestParam(required = false) Integer page,
+        @Parameter(description = "Page size") @RequestParam(required = false) Integer size,
+        @Parameter(description = "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.", example = "fullName,desc") @RequestParam(required = false) String[] sort,
+        @Parameter(description = "Filter by full name (case-insensitive, partial match)") @RequestParam(required = false) String fullName,
+        @Parameter(description = "Filter by qualification") @RequestParam(required = false) String qualification,
+        @Parameter(description = "Filter by license number") @RequestParam(required = false) String licenseNumber) {
+        
+        // Pass all filter parameters to allow simultaneous filtering
+        Page<NurseDTO> result = nurseService.getNursesWithFilters(fullName, qualification, licenseNumber, pageable);
+        return ResponseEntity.ok(PaginationUtil.toPaginatedResponse(result));
     }
     
     @Operation(summary = "Get nurse by ID", description = "Retrieves a specific nurse by their ID")
@@ -51,17 +62,6 @@ public class NurseController {
     public ResponseEntity<NurseDTO> getNurseById(
             @Parameter(description = "ID of the nurse to be obtained") @PathVariable UUID id) {
         return ResponseEntity.ok(nurseService.getNurseById(id));
-    }
-    
-    @Operation(summary = "Get nurses by qualification", description = "Retrieves all nurses with a specific qualification")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved list of nurses by qualification",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
-    })
-    @GetMapping("/qualification")
-    public ResponseEntity<List<NurseDTO>> getNursesByQualification(
-            @Parameter(description = "Nursing qualification") @RequestParam String qualification) {
-        return ResponseEntity.ok(nurseService.getNursesByQualification(qualification));
     }
 
     @Operation(summary = "Create nurse", description = "Creates a new nurse account (Admin access required)")
