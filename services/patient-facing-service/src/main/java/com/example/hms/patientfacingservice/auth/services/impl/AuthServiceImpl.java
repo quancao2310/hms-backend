@@ -10,14 +10,12 @@ import com.example.hms.patientfacingservice.patientaccount.services.PatientAccou
 import com.example.hms.patientfacingservice.auth.services.AuthService;
 import com.example.hms.patientfacingservice.patientaccount.dtos.PatientAccountDTO;
 import com.example.hms.patientfacingservice.patientaccount.repositories.PatientAccountRepository;
-import com.example.hms.patientfacingservice.auth.security.CustomUserDetails;
+import com.example.hms.patientfacingservice.auth.security.impl.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -43,9 +41,11 @@ public class AuthServiceImpl implements AuthService {
     public SignInResponseDTO signIn(SignInRequestDTO dto) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
-        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-        String accessToken = jwtService.generateToken(user);
-        patientAccountRepository.updateLastLoginAt(user.getId());
-        return new SignInResponseDTO(accessToken);
+        if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof CustomUserDetails user) {
+            String accessToken = jwtService.generateToken(user);
+            patientAccountRepository.updateLastLoginAt(user.getPatientAccount().getId());
+            return new SignInResponseDTO(accessToken);
+        }
+        return new SignInResponseDTO(null);
     }
 }

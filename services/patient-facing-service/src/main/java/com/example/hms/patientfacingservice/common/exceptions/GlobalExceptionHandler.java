@@ -1,5 +1,6 @@
 package com.example.hms.patientfacingservice.common.exceptions;
 
+import com.example.hms.patientfacingservice.common.dtos.ErrorResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,7 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @RestControllerAdvice
 @Slf4j
@@ -26,21 +29,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request) {
         log.error("Validation error occurred at {}: {}", ex.getClass().getName(), ex.getMessage(), ex);
 
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
+        Map<String, Set<String>> errors = new HashMap<>();
+        ex.getAllErrors().forEach((error) -> {
+            String fieldName = "global";
+            if (error instanceof FieldError fieldError) {
+                fieldName = fieldError.getField();
+            }
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+            errors.computeIfAbsent(fieldName, k -> new HashSet<>()).add(errorMessage);
         });
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation failed for one or more fields!",
                 errors
         );
         return ResponseEntity.badRequest()
                 .headers(headers)
-                .body(errorResponse);
+                .body(errorResponseDTO);
     }
 
 //    @Override
@@ -56,7 +62,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //                .map(MessageSourceResolvable::getDefaultMessage)
 //                .collect(Collectors.joining(", "));
 //
-//        ErrorResponse errorResponse = new ErrorResponse(
+//        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
 //                status.value(),
 //                errorMessage,
 //                null
@@ -72,65 +78,65 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         super.handleExceptionInternal(ex, body, headers, statusCode, request);
         log.error("{}: {}", ex.getClass().getName(), ex.getMessage(), ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 statusCode.value(),
                 (body instanceof ProblemDetail) ? ((ProblemDetail) body).getDetail() : ex.getMessage()
         );
         return ResponseEntity.status(statusCode)
                 .headers(headers)
-                .body(errorResponse);
+                .body(errorResponseDTO);
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(
+    public ResponseEntity<ErrorResponseDTO> handleAuthenticationException(
             AuthenticationException ex,
             WebRequest request) {
         log.error("{}: {}", ex.getClass().getName(), ex.getMessage(), ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Authentication failed! Please check your credentials."
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(errorResponse);
+                .body(errorResponseDTO);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(
+    public ResponseEntity<ErrorResponseDTO> handleAccessDeniedException(
             AccessDeniedException ex,
             WebRequest request) {
         log.error("{}: {}", ex.getClass().getName(), ex.getMessage(), ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 HttpStatus.FORBIDDEN.value(),
                 "You are not authorized to access this resource!"
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(errorResponse);
+                .body(errorResponseDTO);
     }
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(
+    public ResponseEntity<ErrorResponseDTO> handleCustomException(
             CustomException ex,
             WebRequest request) {
         log.error("{} with status {}: {}", ex.getClass().getSimpleName(), ex.getStatus().value(), ex.getMessage(), ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 ex.getStatus().value(),
                 ex.getMessage()
         );
         return ResponseEntity.status(ex.getStatus())
-                .body(errorResponse);
+                .body(errorResponseDTO);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, WebRequest request) {
+    public ResponseEntity<ErrorResponseDTO> handleGlobalException(Exception ex, WebRequest request) {
         log.error("Exception {}: {}", ex.getClass().getName(), ex.getMessage(), ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred. Please try again later."
         );
-        return ResponseEntity.internalServerError().body(errorResponse);
+        return ResponseEntity.internalServerError().body(errorResponseDTO);
     }
 }

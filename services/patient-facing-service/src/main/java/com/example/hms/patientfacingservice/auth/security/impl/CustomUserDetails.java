@@ -1,28 +1,20 @@
-package com.example.hms.patientfacingservice.auth.security;
+package com.example.hms.patientfacingservice.auth.security.impl;
 
 import com.example.hms.models.external.patientaccount.PatientAccount;
-import lombok.AllArgsConstructor;
+import com.example.hms.patientfacingservice.auth.security.ExtendedUserDetails;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.UUID;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements ExtendedUserDetails {
 
-    private UUID id;
-    private String email;
-    private String password;
+    private final PatientAccount patientAccount;
 
     public CustomUserDetails(PatientAccount patientAccount) {
-        this.id = patientAccount.getId();
-        this.email = patientAccount.getEmail();
-        this.password = patientAccount.getPassword();
+        this.patientAccount = patientAccount;
     }
 
     @Override
@@ -32,12 +24,22 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return patientAccount.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return patientAccount.getEmail();
+    }
+
+    @Override
+    public UUID getId() {
+        return patientAccount.getId();
+    }
+
+    @Override
+    public String getEmail() {
+        return patientAccount.getEmail();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.hms.patientfacingservice.auth.security;
+package com.example.hms.patientfacingservice.auth.security.impl;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

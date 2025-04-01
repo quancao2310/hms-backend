@@ -18,4 +18,9 @@ public interface PatientAccountRepository extends JpaRepository<PatientAccount, 
     @Transactional
     @Query("UPDATE PatientAccount p SET p.lastLoginAt = CURRENT_TIMESTAMP WHERE p.id = :id")
     void updateLastLoginAt(UUID id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE PatientAccount p SET p.password = :password WHERE p.id = :id")
+    void updatePassword(UUID id, String password);
 }

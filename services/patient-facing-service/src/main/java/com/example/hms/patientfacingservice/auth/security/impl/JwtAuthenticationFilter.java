@@ -1,4 +1,4 @@
-package com.example.hms.patientfacingservice.auth.security;
+package com.example.hms.patientfacingservice.auth.security.impl;
 
 import com.example.hms.patientfacingservice.auth.exceptions.InvalidJwtException;
 import com.example.hms.patientfacingservice.auth.services.JwtService;

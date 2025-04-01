@@ -1,6 +1,6 @@
 package com.example.hms.patientfacingservice.auth.config;
 
-import com.example.hms.patientfacingservice.auth.security.JwtAuthenticationFilter;
+import com.example.hms.patientfacingservice.auth.security.impl.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

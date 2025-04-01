@@ -1,4 +1,4 @@
-package com.example.hms.patientfacingservice.auth.security;
+package com.example.hms.patientfacingservice.auth.security.impl;
 
 import com.example.hms.patientfacingservice.patientaccount.repositories.PatientAccountRepository;
 import lombok.RequiredArgsConstructor;
