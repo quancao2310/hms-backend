@@ -75,12 +75,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
-        super.handleExceptionInternal(ex, body, headers, statusCode, request);
+        ResponseEntity<Object> init = super.handleExceptionInternal(ex, body, headers, statusCode, request);
         log.error("{}: {}", ex.getClass().getName(), ex.getMessage(), ex);
 
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 statusCode.value(),
-                (body instanceof ProblemDetail) ? ((ProblemDetail) body).getDetail() : ex.getMessage()
+                (init != null && init.getBody() instanceof ProblemDetail initBody) ? initBody.getDetail() : ex.getMessage()
         );
         return ResponseEntity.status(statusCode)
                 .headers(headers)
