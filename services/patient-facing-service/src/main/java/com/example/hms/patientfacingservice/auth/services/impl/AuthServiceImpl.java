@@ -5,6 +5,7 @@ import com.example.hms.patientfacingservice.auth.dtos.SignInRequestDTO;
 import com.example.hms.patientfacingservice.auth.dtos.SignInResponseDTO;
 import com.example.hms.patientfacingservice.auth.dtos.SignUpRequestDTO;
 import com.example.hms.patientfacingservice.auth.exceptions.DuplicateEmailException;
+import com.example.hms.patientfacingservice.auth.exceptions.DuplicateSsnException;
 import com.example.hms.patientfacingservice.auth.services.JwtService;
 import com.example.hms.patientfacingservice.patientaccount.services.PatientAccountMapper;
 import com.example.hms.patientfacingservice.auth.services.AuthService;
@@ -30,6 +31,9 @@ public class AuthServiceImpl implements AuthService {
     public PatientAccountDTO signUp(SignUpRequestDTO dto) {
         if (patientAccountRepository.existsByEmail(dto.email())) {
             throw new DuplicateEmailException();
+        }
+        if (patientAccountRepository.existsBySsn(dto.ssn())) {
+            throw new DuplicateSsnException();
         }
 
         PatientAccount patientAccount = patientAccountMapper.toPatientAccount(dto);

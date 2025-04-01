@@ -13,6 +13,7 @@ public interface PatientAccountRepository extends JpaRepository<PatientAccount, 
 
     Optional<PatientAccount> findByEmail(String email);
     Boolean existsByEmail(String email);
+    Boolean existsBySsn(String ssn);
 
     @Modifying
     @Transactional
