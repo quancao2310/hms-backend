@@ -48,8 +48,8 @@ public class AuthServiceImpl implements AuthService {
         if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof CustomUserDetails user) {
             String accessToken = jwtService.generateToken(user);
             patientAccountRepository.updateLastLoginAt(user.getPatientAccount().getId());
-            return new SignInResponseDTO(accessToken);
+            return new SignInResponseDTO(accessToken, patientAccountMapper.toPatientAccountDTO(user.getPatientAccount()));
         }
-        return new SignInResponseDTO(null);
+        return new SignInResponseDTO(null, null);
     }
 }
