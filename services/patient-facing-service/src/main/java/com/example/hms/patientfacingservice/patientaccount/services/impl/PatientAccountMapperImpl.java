@@ -37,6 +37,7 @@ public class PatientAccountMapperImpl implements PatientAccountMapper {
                 patientAccount.getEmail(),
                 patientAccount.getSsn(),
                 patientAccount.getPhoneNumber(),
+                "PATIENT",
                 patientAccount.getCreatedAt(),
                 patientAccount.getLastLoginAt()
         );
