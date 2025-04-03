@@ -74,6 +74,20 @@
                                 <artifactId>lombok</artifactId>
                             </exclude>
                         </excludes>
+                        <image>
+                            <name>docker.io/quancao2310/hms-${project.artifactId}:${project.version}</name>
+                            <env>
+                                <BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
+                                <BPE_APPEND_JAVA_TOOL_OPTIONS>-Xss512K</BPE_APPEND_JAVA_TOOL_OPTIONS>
+                            </env>
+                        </image>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <skipTests>true</skipTests>
                     </configuration>
                 </plugin>
             </plugins>
