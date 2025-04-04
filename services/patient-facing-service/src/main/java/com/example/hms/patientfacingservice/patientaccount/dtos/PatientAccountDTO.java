@@ -9,6 +9,7 @@ public record PatientAccountDTO(
         String email,
         String ssn,
         String phoneNumber,
+        String role,
         Instant createdAt,
         Instant lastLoginAt
 ) {

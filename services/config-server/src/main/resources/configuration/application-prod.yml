@@ -1,0 +1,8 @@
+eureka:
+  instance:
+    non-secure-port-enabled: false
+    secure-port-enabled: true
+    secure-port: 443
+    homePageUrl: https://${eureka.instance.hostname}/
+    statusPageUrl: https://${eureka.instance.hostname}/actuator/info
+    healthCheckUrl: https://${eureka.instance.hostname}/actuator/health
