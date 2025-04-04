@@ -27,13 +27,17 @@ public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private String fullName;
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String ssn;
 
     private LocalDate dateOfBirth;
@@ -45,6 +49,9 @@ public class Staff {
 
     @Column(columnDefinition = "TEXT")
     private String address;
+
+    @Column(columnDefinition = "TEXT")
+    private String biography;
 
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
