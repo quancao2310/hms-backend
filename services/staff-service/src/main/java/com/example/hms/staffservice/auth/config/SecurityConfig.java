@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/staff/auth/**").permitAll()
+                        .requestMatchers("/api/v1/staff/auth/signin").permitAll()
                         .anyRequest().authenticated())
                 .build();
     }

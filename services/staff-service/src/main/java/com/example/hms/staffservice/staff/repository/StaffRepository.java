@@ -12,8 +12,8 @@ import java.util.UUID;
 public interface StaffRepository extends JpaRepository<Staff, UUID> {
 
     Optional<Staff> findByEmail(String email);
-    Boolean existsByEmail(String email);
-    Boolean existsBySsn(String ssn);
+    boolean existsByEmail(String email);
+    boolean existsBySsn(String ssn);
 
     @Modifying
     @Transactional
