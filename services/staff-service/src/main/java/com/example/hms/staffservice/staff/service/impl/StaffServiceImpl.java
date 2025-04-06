@@ -15,6 +15,7 @@ import com.example.hms.staffservice.staff.dto.StaffDTO;
 import com.example.hms.staffservice.staff.dto.UpdateStaffDTO;
 import com.example.hms.staffservice.staff.dto.UpdateStatusDTO;
 import com.example.hms.staffservice.staff.dto.StaffFilterDTO;
+import com.example.hms.staffservice.staff.dto.PatchStaffDTO;
 import com.example.hms.staffservice.staff.exception.StaffNotFoundException;
 import com.example.hms.staffservice.staff.repository.DoctorRepository;
 import com.example.hms.staffservice.staff.repository.NurseRepository;
@@ -218,6 +219,91 @@ public class StaffServiceImpl implements StaffService {
         staffRepository.save(staff);
         
         return new MessageDTO("Staff status updated successfully");
+    }
+
+    @Override
+    @Transactional
+    public StaffDTO patchStaff(UUID id, PatchStaffDTO dto) {
+        final Staff staff = staffRepository.findById(id)
+                .orElseThrow(() -> new StaffNotFoundException("Staff not found with id: " + id));
+
+        if (staff.getRole() == UserRole.ADMIN) {
+            throw new StaffNotFoundException("Staff cannot be admin"); // Or appropriate security exception
+        }
+
+        // Flag to check if subtype save is needed
+        boolean needsSave = false;
+
+        // Apply changes from DTO if present
+        if (dto.fullName().isPresent()) { staff.setFullName(dto.fullName().get()); needsSave = true; }
+        if (dto.dateOfBirth().isPresent()) { staff.setDateOfBirth(dto.dateOfBirth().get()); needsSave = true; }
+        if (dto.sex().isPresent()) { staff.setSex(dto.sex().get()); needsSave = true; }
+        if (dto.phoneNumber().isPresent()) { staff.setPhoneNumber(dto.phoneNumber().get()); needsSave = true; }
+        if (dto.nationality().isPresent()) { staff.setNationality(dto.nationality().get()); needsSave = true; }
+        if (dto.address().isPresent()) { staff.setAddress(dto.address().get()); needsSave = true; }
+        if (dto.biography().isPresent()) { staff.setBiography(dto.biography().get()); needsSave = true; }
+        if (dto.startWorkingDate().isPresent()) { staff.setStartWorkingDate(dto.startWorkingDate().get()); needsSave = true; }
+        if (dto.status().isPresent()) { staff.setStatus(dto.status().get()); needsSave = true; }
+
+        // Handle unique constraints
+        if (dto.email().isPresent()) {
+            String newEmail = dto.email().get();
+            
+            String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+            if (!newEmail.matches(emailRegex)) {
+                throw new IllegalArgumentException("Invalid email format provided.");
+            }
+            
+            if (!newEmail.equals(staff.getEmail())) {
+                if (staffRepository.existsByEmail(newEmail)) {
+                    throw new DuplicateEmailException();
+                }
+                staff.setEmail(newEmail);
+                needsSave = true;
+            }
+        }
+
+        if (dto.ssn().isPresent()) {
+            String newSsn = dto.ssn().get();
+            if (!newSsn.equals(staff.getSsn())) {
+                if (staffRepository.existsBySsn(newSsn)) {
+                    throw new DuplicateSsnException();
+                }
+                staff.setSsn(newSsn);
+                needsSave = true;
+            }
+        }
+
+        // Apply role-specific updates
+        if (staff instanceof Doctor doctor) {
+            boolean doctorNeedsSave = false;
+            if(dto.licenseNumber().isPresent()) { doctor.setLicenseNumber(dto.licenseNumber().get()); doctorNeedsSave = true; }
+            if(dto.qualification().isPresent()) { doctor.setQualification(dto.qualification().get()); doctorNeedsSave = true; }
+            if(dto.department().isPresent()) { doctor.setDepartment(dto.department().get()); doctorNeedsSave = true; }
+            if(dto.specializations().isPresent()) { doctor.setSpecializations(dto.specializations().get()); doctorNeedsSave = true; }
+            if(dto.services().isPresent()) { doctor.setServices(dto.services().get()); doctorNeedsSave = true; }
+            if (doctorNeedsSave) {
+                 doctorRepository.save(doctor); // Save changes for Doctor
+                 needsSave = false; // Base staff save is covered by subtype save
+            }
+        } else if (staff instanceof Nurse nurse) {
+            boolean nurseNeedsSave = false;
+            if(dto.licenseNumber().isPresent()) { nurse.setLicenseNumber(dto.licenseNumber().get()); nurseNeedsSave = true; }
+            if(dto.qualification().isPresent()) { nurse.setQualification(dto.qualification().get()); nurseNeedsSave = true; }
+            if(dto.department().isPresent()) { nurse.setDepartment(dto.department().get()); nurseNeedsSave = true; }
+             if (nurseNeedsSave) {
+                 nurseRepository.save(nurse); // Save changes for Nurse
+                 needsSave = false; // Base staff save is covered by subtype save
+             }
+        }
+
+        // Save the base staff entity only if non-role-specific fields were updated
+        // and a subtype save didn't already happen.
+        if (needsSave) {
+            staffRepository.save(staff);
+        }
+
+        return staffMapper.toStaffDTO(staff); // Map the final state of staff
     }
 
     @Override

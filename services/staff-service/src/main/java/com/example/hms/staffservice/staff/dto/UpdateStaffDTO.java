@@ -39,7 +39,6 @@ public record UpdateStaffDTO(
     Set<String> services
 ) {
     public UpdateStaffDTO {
-        // We don't allow changing the role
         if (UserRole.ADMIN.equals(UserRole.valueOf(System.getProperty("role")))) {
             throw new IllegalArgumentException("Admin role is not allowed to be updated");
         }

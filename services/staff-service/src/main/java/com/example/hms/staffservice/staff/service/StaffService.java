@@ -7,6 +7,7 @@ import com.example.hms.staffservice.staff.dto.StaffDTO;
 import com.example.hms.staffservice.staff.dto.StaffFilterDTO;
 import com.example.hms.staffservice.staff.dto.UpdateStaffDTO;
 import com.example.hms.staffservice.staff.dto.UpdateStatusDTO;
+import com.example.hms.staffservice.staff.dto.PatchStaffDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,4 +21,5 @@ public interface StaffService {
     StaffDTO getStaffById(UUID id);
     StaffDTO updateStaff(UUID id, UpdateStaffDTO dto);
     MessageDTO updateStaffStatus(UUID id, UpdateStatusDTO dto);
+    StaffDTO patchStaff(UUID id, PatchStaffDTO patchStaffDTO);
 }

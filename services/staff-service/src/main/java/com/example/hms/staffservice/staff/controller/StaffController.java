@@ -9,6 +9,7 @@ import com.example.hms.staffservice.staff.dto.StaffDTO;
 import com.example.hms.staffservice.staff.dto.StaffFilterDTO;
 import com.example.hms.staffservice.staff.dto.UpdateStaffDTO;
 import com.example.hms.staffservice.staff.dto.UpdateStatusDTO;
+import com.example.hms.staffservice.staff.dto.PatchStaffDTO;
 import com.example.hms.staffservice.staff.service.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -88,28 +89,6 @@ public class StaffController {
     }
 
     @Operation(
-        summary = "Get all staff without pagination",
-        description = "Retrieves all staff members without pagination"
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully retrieved staff list"),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Error occurred while retrieving staff")
-    })
-    @GetMapping("/all")
-    public ResponseEntity<ApiResponse<List<StaffDTO>>> getAllStaffWithoutPagination() {
-        try {
-            List<StaffDTO> staffList = staffService.getAllStaff();
-            return ResponseEntity.ok(
-                    new ApiResponse<>("SUCCESS", "Staff list retrieved successfully", staffList)
-            );
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    new ApiResponse<>("ERROR", e.getMessage(), null)
-            );
-        }
-    }
-
-    @Operation(
         summary = "Get staff by ID",
         description = "Retrieves a staff member by their unique identifier"
     )
@@ -150,6 +129,31 @@ public class StaffController {
             StaffDTO updatedStaff = staffService.updateStaff(id, dto);
             return ResponseEntity.ok(
                     new ApiResponse<>("SUCCESS", "Staff updated successfully", updatedStaff)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse<>("ERROR", e.getMessage(), null)
+            );
+        }
+    }
+
+    @Operation(
+        summary = "Partially update staff information",
+        description = "Updates specific fields of an existing staff member's information using PATCH."
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Staff partially updated successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data, validation error, or staff not found")
+    })
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<StaffDTO>> patchStaff(
+            @Parameter(description = "Staff ID", required = true) @PathVariable UUID id,
+            @Valid @RequestBody PatchStaffDTO dto
+    ) {
+        try {
+            StaffDTO updatedStaff = staffService.patchStaff(id, dto);
+            return ResponseEntity.ok(
+                    new ApiResponse<>("SUCCESS", "Staff partially updated successfully", updatedStaff)
             );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(

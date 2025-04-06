@@ -20,7 +20,7 @@ public interface StaffRepository extends JpaRepository<Staff, UUID> {
     boolean existsBySsn(String ssn);
 
     @Query("SELECT s FROM Staff s WHERE " +
-           "(:fullName IS NULL OR LOWER(s.fullName) LIKE LOWER(CONCAT('%', :fullName, '%'))) AND " +
+           "(:fullName IS NULL OR LOWER(s.fullName) LIKE LOWER(CONCAT('%', CAST(:fullName AS string), '%'))) AND " +
            "(:status IS NULL OR s.status = :status) AND " +
            "(:department IS NULL OR " +
            "(s.role = com.example.hms.enums.UserRole.DOCTOR AND s.id IN (SELECT d.id FROM Doctor d WHERE d.department = :department)) OR " +
