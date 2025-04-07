@@ -6,6 +6,7 @@ import com.example.hms.appointmentservice.dtos.ModifyMaxAppointmentForDoctorRequ
 import com.example.hms.appointmentservice.dtos.DistributeTimeSlotForDoctorRequestDTO;
 import com.example.hms.appointmentservice.repositories.DoctorTimeSlotRepository;
 import com.example.hms.appointmentservice.services.*;
+import com.example.hms.enums.AppointmentStatus;
 import com.example.hms.models.internal.appointment.DoctorTimeSlot;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Admin;
@@ -127,9 +128,13 @@ public class DoctorTimeSlotServiceImpl implements DoctorTimeSlotService {
     }
 
     public Boolean isAvailableDoctor(DoctorTimeSlot doctorTimeSlot) {
-        Integer countAppointmentByDoctorAndTimeSlot = appointmentService.countAppointmentByDoctorAndTimeSlot(doctorTimeSlot.getDoctor(), doctorTimeSlot.getTimeSlot());
+        Integer countAppointmentByDoctorAndTimeSlot = appointmentService
+                .countAppointmentByDoctorAndTimeSlotAndStatus(
+                        doctorTimeSlot.getDoctor(),
+                        doctorTimeSlot.getTimeSlot(),
+                        AppointmentStatus.ACCEPTED);
 
-        return countAppointmentByDoctorAndTimeSlot <= doctorTimeSlot.getMaxAppointment();
+        return countAppointmentByDoctorAndTimeSlot + 1 <= doctorTimeSlot.getMaxAppointment();
 
     }
 }

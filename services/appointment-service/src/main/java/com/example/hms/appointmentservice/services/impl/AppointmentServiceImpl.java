@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -94,5 +95,20 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Integer countAppointmentByDoctorAndTimeSlot(Doctor doctor, TimeSlot timeSlot) {
         return appointmentRepository.countByDoctorAndTimeSlot(doctor, timeSlot);
+    }
+
+    @Override
+    public Integer countAppointmentByDoctorAndTimeSlotAndStatus(
+            Doctor doctor, TimeSlot timeSlot, AppointmentStatus appointmentStatus) {
+        return appointmentRepository.countByDoctorAndTimeSlotAndStatus(doctor, timeSlot, appointmentStatus);
+    }
+
+    @Override
+    public Integer countAppointmentByTimeSlotAndStatusIn(
+            TimeSlot timeSlot, List<AppointmentStatus> appointmentStatuses
+    ) {
+        return appointmentRepository.countByTimeSlotAndStatusIn(
+                timeSlot, appointmentStatuses
+        );
     }
 }

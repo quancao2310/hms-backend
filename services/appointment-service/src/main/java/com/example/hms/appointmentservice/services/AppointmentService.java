@@ -1,10 +1,11 @@
 package com.example.hms.appointmentservice.services;
 
-import com.example.hms.appointmentservice.dtos.CreateAppointmentRequestDTO;
+import com.example.hms.enums.AppointmentStatus;
 import com.example.hms.models.internal.appointment.Appointment;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Doctor;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface AppointmentService {
@@ -16,5 +17,10 @@ public interface AppointmentService {
     Appointment cancelAppointment(UUID id);
     Integer countAppointmentByTimeSlot(TimeSlot timeSlot);
     Integer countAppointmentByDoctorAndTimeSlot(Doctor doctor, TimeSlot timeSlot);
+    Integer countAppointmentByDoctorAndTimeSlotAndStatus(
+            Doctor doctor, TimeSlot timeSlot, AppointmentStatus appointmentStatus);
+    Integer countAppointmentByTimeSlotAndStatusIn(
+            TimeSlot timeSlot, List<AppointmentStatus> appointmentStatuses
+    );
     Appointment saveAppointment(Appointment appointment);
 }

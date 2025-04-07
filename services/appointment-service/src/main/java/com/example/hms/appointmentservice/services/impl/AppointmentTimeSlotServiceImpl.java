@@ -71,8 +71,13 @@ public class AppointmentTimeSlotServiceImpl implements AppointmentTimeSlotServic
     public Boolean isAvailableTimeSlot(TimeSlot timeSlot){
 //        TimeSlot timeSlot = this.getTimeSlotById(id);
 
-        Integer currentAppointmentCount = appointmentService.countAppointmentByTimeSlot(timeSlot);
+        List<AppointmentStatus> appointmentStatuses = List.of(
+                AppointmentStatus.ACCEPTED
+        );
+        Integer currentAppointmentCount = appointmentService.countAppointmentByTimeSlotAndStatusIn(
+            timeSlot, appointmentStatuses
+        );
 
-        return currentAppointmentCount <= timeSlot.getTotalMaxAppointment();
+        return currentAppointmentCount + 1 <= timeSlot.getTotalMaxAppointment();
     }
 }
