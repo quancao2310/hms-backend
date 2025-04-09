@@ -1,4 +1,4 @@
-package com.example.hms.staffservice.config;
+package com.example.hms.staffservice.common.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI staffServiceOpenAPI() {
+    OpenAPI staffServiceOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("HMS Staff Service API")
@@ -27,13 +27,9 @@ public class OpenApiConfig {
                                 .name("HMS License")))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components()
-                        .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()));
+                        .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .bearerFormat("JWT")
+                                .scheme("bearer")));
     }
-
-    private SecurityScheme createAPIKeyScheme() {
-        return new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP)
-                .bearerFormat("JWT")
-                .scheme("bearer");
-    }
-} 
+}
