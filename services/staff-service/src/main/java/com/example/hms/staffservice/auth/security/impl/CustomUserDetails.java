@@ -1,11 +1,14 @@
 package com.example.hms.staffservice.auth.security.impl;
 
+import com.example.hms.enums.WorkingStatus;
 import com.example.hms.models.internal.staff.Staff;
 import com.example.hms.staffservice.auth.security.ExtendedUserDetails;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,7 +22,9 @@ public class CustomUserDetails implements ExtendedUserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(
+                new SimpleGrantedAuthority("ROLE_" + staff.getRole())
+        );
     }
 
     @Override
@@ -59,6 +64,6 @@ public class CustomUserDetails implements ExtendedUserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return WorkingStatus.ACTIVE.equals(staff.getStatus());
     }
 }

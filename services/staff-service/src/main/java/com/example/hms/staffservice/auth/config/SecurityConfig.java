@@ -1,9 +1,11 @@
 package com.example.hms.staffservice.auth.config;
 
+import com.example.hms.enums.UserRole;
 import com.example.hms.staffservice.auth.security.impl.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +39,10 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/staff/auth/signin").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/staff").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/staff/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/staff/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/staff/{id}/status").hasRole(UserRole.ADMIN.name())
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .build();
