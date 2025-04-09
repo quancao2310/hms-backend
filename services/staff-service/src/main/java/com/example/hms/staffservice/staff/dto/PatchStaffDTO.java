@@ -2,39 +2,74 @@ package com.example.hms.staffservice.staff.dto;
 
 import com.example.hms.enums.Sex;
 import com.example.hms.enums.WorkingStatus;
+import com.example.hms.staffservice.common.validator.annotation.ValidEnum;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-// DTO for partial updates via PATCH. Only non-empty Optionals will be considered for update.
 public record PatchStaffDTO(
-    Optional<String> fullName,
+        Optional<
+                @NotBlank(message = "Full name is required") String> fullName,
 
-    Optional<String> email,
+        Optional<
+                @NotBlank(message = "Email is required")
+                @Email(message = "Email must be valid")
+                        String> email,
 
-    Optional<String> ssn,
+        Optional<
+                @NotBlank(message = "SSN is required") String> ssn,
 
-    Optional<LocalDate> dateOfBirth,
+        Optional<
+                @Past(message = "Date of birth must be in the past") LocalDate> dateOfBirth,
 
-    Optional<Sex> sex,
-    Optional<String> phoneNumber,
-    Optional<String> nationality,
-    Optional<String> address,
-    Optional<String> biography,
+        Optional<
+                @ValidEnum(enumClass = Sex.class) String> sex,
 
-    Optional<LocalDate> startWorkingDate,
-    Optional<WorkingStatus> status,
+        Optional<
+                @NotBlank(message = "Phone number is required") String> phoneNumber,
 
-    // Fields for Doctor and Nurse
-    Optional<String> licenseNumber,
-    Optional<String> qualification,
-    Optional<String> department,
+        Optional<
+                @NotBlank(message = "Nationality is required") String> nationality,
 
-    // Fields for Doctor only
-    Optional<Set<String>> specializations,
-    Optional<Set<String>> services
+        Optional<
+                @NotBlank(message = "Address is required") String> address,
+
+        Optional<String> biography,
+
+        Optional<LocalDate> startWorkingDate,
+
+        Optional<
+                @ValidEnum(enumClass = WorkingStatus.class) String> status,
+
+        // Fields for Doctor and Nurse
+        Optional<String> licenseNumber,
+        Optional<String> qualification,
+        Optional<String> department,
+
+        // Fields for Doctor only
+        Optional<Set<String>> specializations,
+        Optional<Set<String>> services
 ) {
-} 
+    public boolean isEmpty() {
+        return fullName.isEmpty() &&
+                email.isEmpty() &&
+                ssn.isEmpty() &&
+                dateOfBirth.isEmpty() &&
+                sex.isEmpty() &&
+                phoneNumber.isEmpty() &&
+                nationality.isEmpty() &&
+                address.isEmpty() &&
+                biography.isEmpty() &&
+                startWorkingDate.isEmpty() &&
+                status.isEmpty() &&
+                licenseNumber.isEmpty() &&
+                qualification.isEmpty() &&
+                department.isEmpty() &&
+                specializations.isEmpty() &&
+                services.isEmpty();
+    }
+}

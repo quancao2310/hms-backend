@@ -1,15 +1,12 @@
 package com.example.hms.staffservice.staff.dto;
 
 import com.example.hms.enums.WorkingStatus;
+import com.example.hms.staffservice.common.validator.annotation.ValidEnum;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdateStatusDTO(
     @NotNull(message = "Status is required")
-    WorkingStatus status
+    @ValidEnum(enumClass = WorkingStatus.class)
+    String status
 ) {
-    public UpdateStatusDTO {
-        if (status == null) {
-            throw new IllegalArgumentException("Status cannot be null");
-        }
-    }
-} 
+}

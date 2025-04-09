@@ -1,7 +1,10 @@
 package com.example.hms.staffservice.staff.exception;
 
-public class StaffNotFoundException extends RuntimeException {
+import com.example.hms.staffservice.common.exception.CustomException;
+import org.springframework.http.HttpStatus;
+
+public class StaffNotFoundException extends CustomException {
     public StaffNotFoundException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND);
     }
-} 
+}

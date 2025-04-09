@@ -1,9 +1,11 @@
 package com.example.hms.staffservice.common.service.impl;
 
+import com.example.hms.staffservice.common.exception.SendEmailException;
 import com.example.hms.staffservice.common.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -36,9 +38,9 @@ public class EmailServiceImpl implements EmailService {
             
             mailSender.send(message);
             log.info("Password email sent successfully to {}", email);
-        } catch (Exception e) {
-            log.error("Failed to send password email to {}: {}", email, e.getMessage());
-            throw new RuntimeException("Failed to send password email", e);
+        } catch (MailException ex) {
+            log.error("Failed to send password email to {}", email, ex);
+            throw new SendEmailException();
         }
     }
-} 
+}
