@@ -2,6 +2,7 @@ package com.example.hms.staffservice.staff.dto;
 
 import com.example.hms.enums.Sex;
 import com.example.hms.enums.WorkingStatus;
+import com.example.hms.staffservice.common.validator.annotation.NullOrNotBlank;
 import com.example.hms.staffservice.common.validator.annotation.ValidEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,38 +13,27 @@ import java.util.Optional;
 import java.util.Set;
 
 public record PatchStaffDTO(
-        Optional<
-                @NotBlank(message = "Full name is required") String> fullName,
+        Optional<@NullOrNotBlank(message = "Full name must not be blank") String> fullName,
 
-        Optional<
-                @NotBlank(message = "Email is required")
-                @Email(message = "Email must be valid")
-                        String> email,
+        Optional<@Email(message = "Email must be valid") String> email,
 
-        Optional<
-                @NotBlank(message = "SSN is required") String> ssn,
+        Optional<@NullOrNotBlank(message = "SSN must not be blank") String> ssn,
 
-        Optional<
-                @Past(message = "Date of birth must be in the past") LocalDate> dateOfBirth,
+        Optional<@Past(message = "Date of birth must be in the past") LocalDate> dateOfBirth,
 
-        Optional<
-                @ValidEnum(enumClass = Sex.class) String> sex,
+        Optional<@ValidEnum(enumClass = Sex.class) String> sex,
 
-        Optional<
-                @NotBlank(message = "Phone number is required") String> phoneNumber,
+        Optional<@NullOrNotBlank(message = "Phone number must not be blank") String> phoneNumber,
 
-        Optional<
-                @NotBlank(message = "Nationality is required") String> nationality,
+        Optional<@NullOrNotBlank(message = "Nationality must not be blank") String> nationality,
 
-        Optional<
-                @NotBlank(message = "Address is required") String> address,
+        Optional<@NullOrNotBlank(message = "Address must not be blank") String> address,
 
         Optional<String> biography,
 
         Optional<LocalDate> startWorkingDate,
 
-        Optional<
-                @ValidEnum(enumClass = WorkingStatus.class) String> status,
+        Optional<@ValidEnum(enumClass = WorkingStatus.class) String> status,
 
         // Fields for Doctor and Nurse
         Optional<String> licenseNumber,
