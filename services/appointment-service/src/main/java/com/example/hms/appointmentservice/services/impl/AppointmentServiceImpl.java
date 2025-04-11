@@ -1,28 +1,34 @@
 package com.example.hms.appointmentservice.services.impl;
 
 import com.example.hms.appointmentservice.dtos.CreateAppointmentRequestDTO;
+import com.example.hms.appointmentservice.dtos.SearchRequestDTO;
 import com.example.hms.appointmentservice.repositories.AppointmentRepository;
-import com.example.hms.appointmentservice.services.AppointmentService;
-import com.example.hms.appointmentservice.services.DoctorService;
-import com.example.hms.appointmentservice.services.DoctorTimeSlotService;
-import com.example.hms.appointmentservice.services.TimeSlotService;
+import com.example.hms.appointmentservice.services.*;
 import com.example.hms.enums.AppointmentStatus;
 import com.example.hms.models.internal.appointment.Appointment;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Doctor;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorService doctorService;
+    private final BaseSearchService baseSearchService;
 
     @Override
     @Transactional
@@ -110,5 +116,28 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepository.countByTimeSlotAndStatusIn(
                 timeSlot, appointmentStatuses
         );
+    }
+
+    @Override
+    public Page<Appointment> searchAppointments(SearchRequestDTO requestDTO) {
+        return baseSearchService.search(Appointment.class, appointmentRepository, requestDTO);
+    }
+
+    @Scheduled(cron = "0 0 1 * * *", zone = "Asia/Ho_Chi_Minh")
+    public void updateAppointmentStatus() {
+        List<AppointmentStatus> statuses = List.of(
+                AppointmentStatus.ACCEPTED,
+                AppointmentStatus.PENDING,
+                AppointmentStatus.RESCHEDULED
+        );
+        List<Appointment> appointments = appointmentRepository.findByStatusInAndDateBefore(
+          statuses, LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"))
+        );
+        List<Appointment> canceledAppointment = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            appointment.setStatus(AppointmentStatus.CANCELLED);
+            canceledAppointment.add(appointment);
+        }
+        appointmentRepository.saveAll(canceledAppointment);
     }
 }

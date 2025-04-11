@@ -2,9 +2,13 @@ package com.example.hms.appointmentservice.controllers;
 
 import com.example.hms.appointmentservice.dtos.AssignDoctorRequestDTO;
 import com.example.hms.appointmentservice.dtos.CreateAppointmentRequestDTO;
+import com.example.hms.appointmentservice.dtos.SearchRequestDTO;
 import com.example.hms.appointmentservice.services.AppointmentService;
 import com.example.hms.appointmentservice.services.AppointmentTimeSlotService;
+import com.example.hms.appointmentservice.utils.SearchParams;
+import com.example.hms.models.internal.appointment.Appointment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +38,14 @@ public class AppointmentController {
                         .getDoctorId()));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> getAppointmentById(@PathVariable UUID id) {
-        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+//    @GetMapping("{id}")
+//    public ResponseEntity<?> getAppointmentById(@PathVariable UUID id) {
+//        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+//    }
+
+    @GetMapping()
+    public Page<Appointment> searchAppointment(@SearchParams SearchRequestDTO request) {
+        return appointmentService.searchAppointments(request);
     }
 
     @GetMapping("/accept/{id}")

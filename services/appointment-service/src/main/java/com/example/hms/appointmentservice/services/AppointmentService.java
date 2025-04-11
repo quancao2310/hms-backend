@@ -1,9 +1,11 @@
 package com.example.hms.appointmentservice.services;
 
+import com.example.hms.appointmentservice.dtos.SearchRequestDTO;
 import com.example.hms.enums.AppointmentStatus;
 import com.example.hms.models.internal.appointment.Appointment;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Doctor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,5 +24,6 @@ public interface AppointmentService {
     Integer countAppointmentByTimeSlotAndStatusIn(
             TimeSlot timeSlot, List<AppointmentStatus> appointmentStatuses
     );
+    Page<Appointment> searchAppointments(SearchRequestDTO requestDTO);
     Appointment saveAppointment(Appointment appointment);
 }
