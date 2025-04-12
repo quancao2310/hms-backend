@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("appointments")
+@RequestMapping("/api/v1/appointments")
 @RequiredArgsConstructor
 public class AppointmentController {
     private final AppointmentService appointmentService;

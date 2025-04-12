@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("timeslots")
+@RequestMapping("/api/v1/timeslots")
 @RequiredArgsConstructor
 public class TimeSlotController {
     private final TimeSlotService timeSlotService;

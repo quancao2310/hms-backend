@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("doctor-timeslots")
+@RequestMapping("/api/v1/doctor-timeslots")
 @RequiredArgsConstructor
 public class DoctorTimeSlotController {
     private final DoctorTimeSlotService doctorTimeSlotService;
