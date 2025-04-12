@@ -32,22 +32,34 @@ public class FilteringSpecification {
                             .and(predicate, criteriaBuilder.notEqual(
                                     path, convert(path, val)
                             ));
-                    case GREATER_THAN -> predicate = criteriaBuilder
-                            .and(predicate, criteriaBuilder.greaterThan(
-                                    path.as(Comparable.class), (Comparable<Object>) convert(path, val)
-                            ));
-                    case GREATER_THAN_OR_EQUALS -> predicate = criteriaBuilder
-                            .and(predicate, criteriaBuilder.greaterThanOrEqualTo(
-                                    path.as(Comparable.class), (Comparable<Object>) convert(path, val)
-                            ));
-                    case LESS_THAN -> predicate = criteriaBuilder
-                            .and(predicate, criteriaBuilder.lessThan(
-                                    path.as(Comparable.class), (Comparable<Object>) convert(path, val)
-                            ));
-                    case LESS_THAN_OR_EQUALS -> predicate = criteriaBuilder
-                            .and(predicate, criteriaBuilder.lessThanOrEqualTo(
-                                    path.as(Comparable.class), (Comparable<Object>) convert(path, val)
-                            ));
+                    case GREATER_THAN -> {
+                        Comparable converted = (Comparable) convert(path, val);
+                        predicate = criteriaBuilder
+                                .and(predicate, criteriaBuilder.greaterThan(
+                                        path.as(converted.getClass()), converted)
+                                );
+                    }
+                    case GREATER_THAN_OR_EQUALS -> {
+                        Comparable converted = (Comparable) convert(path, val);
+                        predicate = criteriaBuilder
+                                .and(predicate, criteriaBuilder.greaterThanOrEqualTo(
+                                        path.as(converted.getClass()), converted)
+                                );
+                    }
+                    case LESS_THAN -> {
+                        Comparable converted = (Comparable) convert(path, val);
+                        predicate = criteriaBuilder
+                                .and(predicate, criteriaBuilder.lessThan(
+                                        path.as(converted.getClass()), converted)
+                                );
+                    }
+                    case LESS_THAN_OR_EQUALS -> {
+                        Comparable converted = (Comparable) convert(path, val);
+                        predicate = criteriaBuilder
+                                .and(predicate, criteriaBuilder.lessThanOrEqualTo(
+                                        path.as(converted.getClass()), converted)
+                                );
+                    }
                     case LIKE -> predicate = criteriaBuilder
                             .and(predicate, criteriaBuilder.like(path.as(String.class), "%" + val + "%"));
                     case IS_NULL -> predicate = criteriaBuilder

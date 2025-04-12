@@ -18,4 +18,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
             Doctor doctor, TimeSlot timeSlot, AppointmentStatus appointmentStatus);
     Integer countByTimeSlotAndStatusIn(TimeSlot timeSlot, List<AppointmentStatus> appointmentStatuses);
     List<Appointment> findByStatusInAndDateBefore(List<AppointmentStatus> appointmentStatus, LocalDate date);
+    List<Appointment> findByTimeSlot(TimeSlot timeSlot);
+    List<Appointment> findByTimeSlotIn(List<TimeSlot> timeSlots);
 }

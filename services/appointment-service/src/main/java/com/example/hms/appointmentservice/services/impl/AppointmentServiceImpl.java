@@ -140,4 +140,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         appointmentRepository.saveAll(canceledAppointment);
     }
+
+    @Override
+    public List<Appointment> getAppointmentByTimeSlot(TimeSlot timeSlot) {
+        return appointmentRepository.findByTimeSlot(timeSlot);
+    }
+
+    @Override
+    public List<Appointment> getAppointmentByTimeSlots(List<TimeSlot> timeSlots) {
+        return appointmentRepository.findByTimeSlotIn(timeSlots);
+    }
 }

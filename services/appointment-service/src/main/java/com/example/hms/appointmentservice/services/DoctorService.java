@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface DoctorService {
     Doctor getDoctorById(UUID id);
     List<Doctor> getAllDoctors();
+    List<Doctor> getDoctorsByIds(List<UUID> ids);
 }

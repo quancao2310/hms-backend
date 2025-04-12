@@ -15,8 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,17 +32,34 @@ public class DoctorTimeSlotServiceImpl implements DoctorTimeSlotService {
 
     @Override
     @Transactional
-    public DoctorTimeSlot createDoctorTimeSlot(CreateDoctorTimeSlotRequestDTO createDoctorTimeSlotRequestDTO) {
+    public List<DoctorTimeSlot> createDoctorTimeSlot(CreateDoctorTimeSlotRequestDTO createDoctorTimeSlotRequestDTO) {
         Admin admin =  adminService.getAdminById(createDoctorTimeSlotRequestDTO.getAssignedBy());
+        List<TimeSlot> timeSlots = timeSlotService.getTimeSlotsByIds(createDoctorTimeSlotRequestDTO.getTimeSlotIds());
+        List<Doctor> doctors = doctorService.getDoctorsByIds(createDoctorTimeSlotRequestDTO.getDoctorIds());
+        List<DoctorTimeSlot> result = new ArrayList<>();
 
-        return doctorTimeSlotRepository.save(
-                DoctorTimeSlot.builder()
-                        .maxAppointment(createDoctorTimeSlotRequestDTO.getMaxAppointments())
-                        .assignedBy(admin)
-                        .doctor(createDoctorTimeSlotRequestDTO.getDoctor())
-                        .timeSlot(createDoctorTimeSlotRequestDTO.getTimeSlot())
-                        .build()
-        );
+        for (Doctor doctor : doctors) {
+            for (TimeSlot timeSlot : timeSlots) {
+                Optional<DoctorTimeSlot> doctorTimeSlot = doctorTimeSlotRepository.findByDoctor_IdAndTimeSlot_Id(
+                        doctor.getId(), timeSlot.getId()
+                );
+
+                if (doctorTimeSlot.isPresent()) {
+                    continue;
+                } else {
+                    result.add(doctorTimeSlotRepository.save(
+                            DoctorTimeSlot.builder()
+                                    .maxAppointment(createDoctorTimeSlotRequestDTO.getMaxAppointments())
+                                    .assignedBy(admin)
+                                    .doctor(doctor)
+                                    .timeSlot(timeSlot)
+                                    .build()
+                    ));
+                }
+            }
+        }
+
+        return doctorTimeSlotRepository.saveAll(result);
     }
 
     @Override
@@ -52,18 +71,23 @@ public class DoctorTimeSlotServiceImpl implements DoctorTimeSlotService {
         Integer maxAppointmentsPerTimeSlot = createBulkDoctorTimeSlotRequestDTO.getMaxAppointmentsPerTimeSlot();
 
         for (TimeSlot timeSlot : timeSlots) {
-            DoctorTimeSlot doctorTimeSlot = doctorTimeSlotRepository.save(
-                    DoctorTimeSlot.builder()
-                            .timeSlot(timeSlot)
-                            .doctor(doctor)
-                            .maxAppointment(maxAppointmentsPerTimeSlot)
-                            .build()
+            Optional<DoctorTimeSlot> doctorTimeSlot = doctorTimeSlotRepository.findByDoctor_IdAndTimeSlot_Id(
+                    doctor.getId(), timeSlot.getId()
             );
 
-            result.add(doctorTimeSlot);
+            if (doctorTimeSlot.isPresent()) {
+                continue;
+            } else {
+                result.add(DoctorTimeSlot.builder()
+                                .timeSlot(timeSlot)
+                                .doctor(doctor)
+                                .maxAppointment(maxAppointmentsPerTimeSlot)
+                                .build()
+                );
+            }
         }
 
-        return result;
+        return doctorTimeSlotRepository.saveAll(result);
     }
 
     @Override
@@ -136,5 +160,20 @@ public class DoctorTimeSlotServiceImpl implements DoctorTimeSlotService {
 
         return countAppointmentByDoctorAndTimeSlot + 1 <= doctorTimeSlot.getMaxAppointment();
 
+    }
+
+    @Override
+    public Optional<DoctorTimeSlot> getDoctorTimeSlotById(UUID doctorId, UUID timeSlotId) {
+        return doctorTimeSlotRepository.findByDoctor_IdAndTimeSlot_Id(doctorId, timeSlotId);
+    }
+
+    @Override
+    public void removeDoctorTimeSlots(List<DoctorTimeSlot> doctorTimeSlots) {
+        doctorTimeSlotRepository.deleteAll(doctorTimeSlots);
+    }
+
+    @Override
+    public List<DoctorTimeSlot> getDoctorTimeSlotsByTimeSlot(TimeSlot timeSlot) {
+        return doctorTimeSlotRepository.findByTimeSlot(timeSlot);
     }
 }

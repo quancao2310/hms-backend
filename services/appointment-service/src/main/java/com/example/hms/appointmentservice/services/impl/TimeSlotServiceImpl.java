@@ -5,10 +5,12 @@ import com.example.hms.appointmentservice.dtos.CreateTimeSlotRequestDTO;
 import com.example.hms.appointmentservice.dtos.GetTimeSlotSelectionsResponseDTO;
 import com.example.hms.appointmentservice.repositories.TimeSlotRepository;
 import com.example.hms.appointmentservice.services.AppointmentService;
+import com.example.hms.appointmentservice.services.AppointmentTimeSlotService;
 import com.example.hms.appointmentservice.services.DoctorTimeSlotService;
 import com.example.hms.appointmentservice.services.TimeSlotService;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Doctor;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,14 +40,27 @@ public class TimeSlotServiceImpl implements TimeSlotService {
             LocalTime slotEnd = createBulkTimeSlotRequestDTO.getEndTime();
 
             while (slotStart.plusMinutes(durationMinutes).isBefore(slotEnd) ||
-                    slotEnd.plusMinutes(durationMinutes).equals(slotEnd)) {
+                    slotStart.plusMinutes(durationMinutes).equals(slotEnd)) {
+
+                LocalTime newSlotEnd = slotStart.plusMinutes(durationMinutes);
+                List<TimeSlot> timeSlots = timeSlotRepository.findByWeekAndDate(
+                        createBulkTimeSlotRequestDTO.getWeek(),
+                        dayOfWeek
+                );
+
+                for (TimeSlot timeSlot : timeSlots) {
+                    if (slotStart.isBefore(timeSlot.getEndTime())
+                            && timeSlot.getStartTime().isBefore(newSlotEnd)) {
+                        throw new BadRequestException("Overlap TimeSlot");
+                    }
+                }
 
                 result.add(
                         TimeSlot.builder()
                                 .week(week)
                                 .date(dayOfWeek)
                                 .startTime(slotStart)
-                                .endTime(slotStart.plusMinutes(durationMinutes))
+                                .endTime(newSlotEnd)
                                 .totalMaxAppointment(maxAppointmentPerTimeSlot)
                                 .build()
                 );
@@ -64,6 +79,18 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     @Override
     @Transactional
     public TimeSlot createTimeSlot(CreateTimeSlotRequestDTO createTimeSlotRequestDTO) {
+
+        List<TimeSlot> timeSlots = timeSlotRepository.findByWeekAndDate(
+                createTimeSlotRequestDTO.getWeek(),
+                createTimeSlotRequestDTO.getDate()
+        );
+
+        for (TimeSlot timeSlot : timeSlots) {
+            if (createTimeSlotRequestDTO.getStartTime().isBefore(timeSlot.getEndTime())
+            && timeSlot.getStartTime().isBefore(createTimeSlotRequestDTO.getEndTime())) {
+                throw new BadRequestException("Overlap TimeSlot");
+            }
+        }
 
         return timeSlotRepository.save(
                 TimeSlot.builder()
@@ -84,6 +111,16 @@ public class TimeSlotServiceImpl implements TimeSlotService {
         timeSlotRepository.deleteById(timeSlotID);
 
         return deletedTimeSlot;
+    }
+
+    @Override
+    @Transactional
+    public List<TimeSlot> removeTimeSlots(List<UUID> timeSlotIds) {
+        List<TimeSlot> deletedTimeSlots = this.getTimeSlotsByIds(timeSlotIds);
+
+        timeSlotRepository.deleteAllById(timeSlotIds);
+
+        return deletedTimeSlots;
     }
 
     @Override

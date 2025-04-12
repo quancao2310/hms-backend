@@ -17,4 +17,5 @@ public interface TimeSlotService {
     TimeSlot getTimeSlotById(UUID timeSlotID);
     List<TimeSlot> getTimeSlotsByWeekAndDate(Integer week, DayOfWeek date);
     List<TimeSlot> getTimeSlotsByIds(List<UUID> ids);
+    List<TimeSlot> removeTimeSlots(List<UUID> timeSlotIds);
 }

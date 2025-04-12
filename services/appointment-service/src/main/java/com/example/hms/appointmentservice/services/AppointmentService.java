@@ -26,4 +26,6 @@ public interface AppointmentService {
     );
     Page<Appointment> searchAppointments(SearchRequestDTO requestDTO);
     Appointment saveAppointment(Appointment appointment);
+    List<Appointment> getAppointmentByTimeSlot(TimeSlot timeSlot);
+    List<Appointment> getAppointmentByTimeSlots(List<TimeSlot> timeSlots);
 }
