@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/api/v1/files")
 @RequiredArgsConstructor
 public class CloudinaryController {
     private final CloudinaryService cloudinaryService;
