@@ -19,9 +19,10 @@ public class FilteringSpecification {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
             for (FilteringDTO filter: filters) {
-                String prop = filter.getProperty();
+                String[] props = filter.getProperty().split("\\.");
+//                String prop = props.length == 1 ? props[0] : root.get(props);
                 String val = filter.getValue();
-                Path<?> path = root.get(prop);
+                Path<?> path = props.length == 1 ? root.get(props[0]) : root.get(props[0]).get(props[1]);
 
                 switch (FilterRule.fromValue(filter.getRule())) {
                     case EQUALS -> predicate = criteriaBuilder

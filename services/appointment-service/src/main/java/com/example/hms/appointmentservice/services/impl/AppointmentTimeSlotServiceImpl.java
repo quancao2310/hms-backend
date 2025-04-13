@@ -11,6 +11,7 @@ import com.example.hms.models.internal.appointment.Appointment;
 import com.example.hms.models.internal.appointment.DoctorTimeSlot;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Doctor;
+import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,21 @@ public class AppointmentTimeSlotServiceImpl implements AppointmentTimeSlotServic
     @Override
     @Transactional
     public Appointment createAppointment(CreateAppointmentRequestDTO createAppointmentRequestDTO) {
+        TimeSlot timeSlot = timeSlotService.getTimeSlotById(createAppointmentRequestDTO.getTimeSlotId());
+        List<AppointmentStatus> appointmentStatuses = List.of(
+                AppointmentStatus.ACCEPTED,
+                AppointmentStatus.PENDING);
+        Integer countAppointmentByTimeSlot = appointmentService
+                .countAppointmentByTimeSlotAndStatusIn(
+                        timeSlot,
+                        appointmentStatuses);
+
+
+
+        if (countAppointmentByTimeSlot.equals(timeSlot.getTotalMaxAppointment())) {
+            throw new BadRequestException("Max Appointment");
+        }
+
         return appointmentService.saveAppointment(
                 Appointment.builder()
                         .date(createAppointmentRequestDTO.getDate())
