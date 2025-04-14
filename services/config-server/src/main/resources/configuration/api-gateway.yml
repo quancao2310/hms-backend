@@ -23,7 +23,7 @@ spring:
         - id: appointment-service
           uri: lb://appointment-service
           predicates:
-            - Path=/api/v1/appointments/**,/api/v1/timeslots/**,/api/v1/doctor-timeslots/**,/api/v1/files
+            - Path=/api/v1/appointments/**,/api/v1/timeslots/**,/api/v1/doctor-timeslots/**,/api/v1/files/**
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
