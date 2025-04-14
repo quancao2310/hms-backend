@@ -93,6 +93,7 @@ public class AppointmentTimeSlotServiceImpl implements AppointmentTimeSlotServic
 //        TimeSlot timeSlot = this.getTimeSlotById(id);
 
         List<AppointmentStatus> appointmentStatuses = List.of(
+                AppointmentStatus.PENDING,
                 AppointmentStatus.ACCEPTED
         );
         Integer currentAppointmentCount = appointmentService.countAppointmentByTimeSlotAndStatusIn(

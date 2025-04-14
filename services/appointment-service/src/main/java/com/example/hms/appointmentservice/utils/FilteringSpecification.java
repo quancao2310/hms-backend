@@ -10,6 +10,7 @@ import jakarta.ws.rs.BadRequestException;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -96,6 +97,9 @@ public class FilteringSpecification {
 
         if (type.equals(LocalDate.class)) {
             return LocalDate.parse(val);
+        }
+        if (type.equals(LocalDateTime.class)) {
+            return LocalDateTime.parse(val);
         }
         if (type.equals(Long.class)) {
             return Long.parseLong(val);
