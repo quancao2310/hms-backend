@@ -1,5 +1,7 @@
 package com.example.hms.appointmentservice.controllers;
 
+import com.example.hms.appointmentservice.dtos.UrlDTO;
+import com.example.hms.appointmentservice.dtos.UrlsDTO;
 import com.example.hms.appointmentservice.services.CloudinaryService;
 import com.example.hms.models.internal.appointment.DoctorTimeSlot;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -27,7 +29,7 @@ public class CloudinaryController {
                     description = "Success",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)
+                            schema = @Schema(implementation = UrlDTO.class)
                     )
             )
     })
@@ -43,7 +45,7 @@ public class CloudinaryController {
                     content = @Content(
                             mediaType = "application/json",
                             array = @ArraySchema(
-                                    schema = @Schema(implementation = String.class))
+                                    schema = @Schema(implementation = UrlsDTO.class))
                     )
             )
     })
