@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,7 +20,7 @@ import java.util.List;
 public class CloudinaryController {
     private final CloudinaryService cloudinaryService;
 
-    @PostMapping("/upload/single")
+    @PostMapping(value = "/upload/single", consumes = "multipart/form-data")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -34,11 +31,11 @@ public class CloudinaryController {
                     )
             )
     })
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseEntity<?> uploadFile(@RequestPart("file") MultipartFile file) throws Exception {
         return ResponseEntity.ok(cloudinaryService.uploadFile(file));
     }
 
-    @PostMapping("/upload/many")
+    @PostMapping(value = "/upload/many", consumes = "multipart/form-data")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -50,7 +47,7 @@ public class CloudinaryController {
                     )
             )
     })
-    public ResponseEntity<?> uploadFiles(@RequestParam("files") List<MultipartFile> files) throws Exception {
+    public ResponseEntity<?> uploadFiles(@RequestPart("files") List<MultipartFile> files) throws Exception {
         return ResponseEntity.ok(cloudinaryService.uploadFiles(files));
     }
 }
