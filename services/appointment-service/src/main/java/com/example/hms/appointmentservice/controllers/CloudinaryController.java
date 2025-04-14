@@ -44,9 +44,7 @@ public class CloudinaryController {
                     description = "Success",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(
-                                    schema = @Schema(implementation = UrlsDTO.class))
-                    )
+                            schema = @Schema(implementation = UrlsDTO.class))
             )
     })
     public ResponseEntity<?> uploadFiles(@RequestPart("files") List<MultipartFile> files) throws Exception {
