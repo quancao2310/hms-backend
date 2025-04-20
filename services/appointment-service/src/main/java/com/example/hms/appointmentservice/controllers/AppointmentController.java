@@ -74,7 +74,7 @@ public class AppointmentController {
         return appointmentService.searchAppointments(request);
     }
 
-    @GetMapping("/accept/{id}")
+    @PatchMapping("{id}/accept")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -90,7 +90,7 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.acceptAppointment(id));
     }
 
-    @GetMapping("/decline/{id}")
+    @PatchMapping("{id}/reject")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -105,7 +105,7 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.declineAppointment(id));
     }
 
-    @GetMapping("/complete/{id}")
+    @PatchMapping("{id}/complete")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -120,7 +120,7 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.completeAppointment(id));
     }
 
-    @GetMapping("/cancel/{id}")
+    @PatchMapping("{id}/cancel")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -135,7 +135,7 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.cancelAppointment(id));
     }
 
-    @GetMapping("/reschedule/{id}")
+    @PatchMapping("{id}/reschedule")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
