@@ -60,4 +60,7 @@ public class Patient {
     @OneToOne
     @JoinColumn(name = "medical_history_id")
     private MedicalHistory medicalHistory;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<MedicalRecord> medicalRecords;
 }
