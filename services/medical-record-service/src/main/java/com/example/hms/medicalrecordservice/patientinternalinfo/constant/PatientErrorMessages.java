@@ -4,16 +4,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ErrorMessages {
+public final class PatientErrorMessages {
+    public static final String PATIENT_INFORMATION_REQUIRED = "Patient information is required";
     public static final String PATIENT_NOT_FOUND = "Patient not found with ID: %s";
     public static final String PATIENT_SSN_ALREADY_EXISTS = "SSN is already registered";
-
-    public static final String INVALID_INPUT = "Invalid input provided";
-    public static final String UNAUTHORIZED_ACCESS = "Unauthorized access to resource";
-    public static final String RESOURCE_NOT_FOUND = "Requested resource not found";
-    public static final String SERVICE_UNAVAILABLE = "Service temporarily unavailable";
-
-    public static final String MEDICAL_RECORD_NOT_FOUND = "Medical record not found with ID: %s";
 
     public static final String FULL_NAME_REQUIRED = "Full name is required";
     public static final String FULL_NAME_TOO_LONG = "Full name must be less than 100 characters";

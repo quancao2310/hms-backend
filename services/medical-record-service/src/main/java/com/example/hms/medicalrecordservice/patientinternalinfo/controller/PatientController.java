@@ -1,7 +1,13 @@
 package com.example.hms.medicalrecordservice.patientinternalinfo.controller;
 
-import com.example.hms.medicalrecordservice.patientinternalinfo.constant.ErrorMessages;
+import com.example.hms.medicalrecordservice.common.constant.CommonErrorMessages;
+import com.example.hms.medicalrecordservice.medicalinfo.constant.MedicalInfoErrorMessages;
+import com.example.hms.medicalrecordservice.medicalinfo.dto.MedicalInfoMutationRequestDTO;
+import com.example.hms.medicalrecordservice.medicalinfo.dto.MedicalInfoResponseDTO;
+import com.example.hms.medicalrecordservice.medicalinfo.service.MedicalInfoService;
+import com.example.hms.medicalrecordservice.patientinternalinfo.constant.PatientErrorMessages;
 import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientCreateRequestDTO;
+import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientMutationRequestDTO;
 import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientResponseDTO;
 import com.example.hms.medicalrecordservice.patientinternalinfo.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +19,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -24,6 +36,7 @@ import java.util.UUID;
 public class PatientController {
 
     private final PatientService patientService;
+    private final MedicalInfoService medicalInfoService;
 
     @Operation(
             summary = "Create a new patient",
@@ -31,8 +44,8 @@ public class PatientController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Patient created successfully"),
-            @ApiResponse(responseCode = "400", description = ErrorMessages.INVALID_INPUT),
-            @ApiResponse(responseCode = "409", description = ErrorMessages.PATIENT_SSN_ALREADY_EXISTS)
+            @ApiResponse(responseCode = "400", description = CommonErrorMessages.INVALID_INPUT),
+            @ApiResponse(responseCode = "409", description = PatientErrorMessages.PATIENT_SSN_ALREADY_EXISTS)
     })
     @PostMapping
     public ResponseEntity<PatientResponseDTO> createPatient(@Valid @RequestBody PatientCreateRequestDTO request) {
@@ -46,7 +59,7 @@ public class PatientController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved patient"),
-            @ApiResponse(responseCode = "404", description = ErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = PatientErrorMessages.PATIENT_NOT_FOUND)
     })
     @GetMapping("/{id}")
     public ResponseEntity<PatientResponseDTO> getPatientById(
@@ -54,5 +67,22 @@ public class PatientController {
     ) {
         PatientResponseDTO patient = patientService.getPatientById(id);
         return ResponseEntity.ok(patient);
+    }
+
+    @Operation(
+            summary = "Update patient information",
+            description = "Updates an existing patient's information"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Patient updated successfully"),
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientResponseDTO> updatePatient(
+            @Parameter(description = "Patient ID", required = true) @PathVariable UUID id,
+            @Valid @RequestBody PatientMutationRequestDTO request
+    ) {
+        PatientResponseDTO updatedPatient = patientService.updatePatient(id, request);
+        return ResponseEntity.ok(updatedPatient);
     }
 }

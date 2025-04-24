@@ -1,6 +1,5 @@
-package com.example.hms.medicalrecordservice.patientinternalinfo.exception;
+package com.example.hms.medicalrecordservice.common.exception;
 
-import com.example.hms.medicalrecordservice.common.exception.CustomException;
 import org.springframework.http.HttpStatus;
 
 public class ResourceAlreadyExistsException extends CustomException {
