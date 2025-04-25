@@ -1,5 +1,6 @@
 package com.example.hms.models.internal.medicalrecord;
 
+import com.example.hms.models.internal.staff.Doctor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,10 @@ public class MedicalRecord {
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
     @CreatedDate
     @Column(updatable = false, nullable = false)

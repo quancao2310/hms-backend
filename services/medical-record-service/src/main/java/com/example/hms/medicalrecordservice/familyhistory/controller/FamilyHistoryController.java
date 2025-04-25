@@ -1,5 +1,6 @@
 package com.example.hms.medicalrecordservice.familyhistory.controller;
 
+import com.example.hms.medicalrecordservice.common.constant.CommonErrorMessages;
 import com.example.hms.medicalrecordservice.familyhistory.constant.FamilyHistoryErrorMessages;
 import com.example.hms.medicalrecordservice.familyhistory.dto.FamilyHistoryCreateRequestDTO;
 import com.example.hms.medicalrecordservice.familyhistory.dto.FamilyHistoryResponseDTO;
@@ -51,7 +52,7 @@ public class FamilyHistoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved family history"),
-            @ApiResponse(responseCode = "404", description = FamilyHistoryErrorMessages.FAMILY_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = FamilyHistoryErrorMessages.FAMILY_HISTORY_NOT_FOUND)
     })
     @GetMapping("/{familyHistoryId}")
     public ResponseEntity<FamilyHistoryResponseDTO> getFamilyHistoryById(
@@ -68,7 +69,7 @@ public class FamilyHistoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Family history created successfully"),
-            @ApiResponse(responseCode = "400", description = FamilyHistoryErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = CommonErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
     })
     @PostMapping
     public ResponseEntity<FamilyHistoryResponseDTO> createFamilyHistory(

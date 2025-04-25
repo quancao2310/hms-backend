@@ -52,7 +52,7 @@ public class SurgicalHistoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved surgical history"),
-            @ApiResponse(responseCode = "404", description = SurgicalHistoryErrorMessages.SURGICAL_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = SurgicalHistoryErrorMessages.SURGICAL_HISTORY_NOT_FOUND)
     })
     @GetMapping("/{surgicalHistoryId}")
     public ResponseEntity<SurgicalHistoryResponseDTO> getSurgicalHistoryById(
@@ -69,7 +69,7 @@ public class SurgicalHistoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Surgical history created successfully"),
-            @ApiResponse(responseCode = "400", description = SurgicalHistoryErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = CommonErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
     })
     @PostMapping
     public ResponseEntity<SurgicalHistoryResponseDTO> createSurgicalHistory(

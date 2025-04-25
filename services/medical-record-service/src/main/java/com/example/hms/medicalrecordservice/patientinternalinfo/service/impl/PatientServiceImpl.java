@@ -1,22 +1,28 @@
 package com.example.hms.medicalrecordservice.patientinternalinfo.service.impl;
 
+import com.example.hms.medicalrecordservice.medicalrecord.service.MedicalRecordMapper;
 import com.example.hms.medicalrecordservice.patientinternalinfo.constant.PatientErrorMessages;
 import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientCreateRequestDTO;
 import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientMutationRequestDTO;
 import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientResponseDTO;
 import com.example.hms.medicalrecordservice.common.exception.ResourceAlreadyExistsException;
 import com.example.hms.medicalrecordservice.common.exception.ResourceNotFoundException;
+import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientWithLatestRecordDTO;
 import com.example.hms.medicalrecordservice.patientinternalinfo.repository.PatientRepository;
 import com.example.hms.medicalrecordservice.medicalinfo.service.MedicalInfoMapper;
 import com.example.hms.medicalrecordservice.patientinternalinfo.service.PatientMapper;
 import com.example.hms.medicalrecordservice.patientinternalinfo.service.PatientService;
 import com.example.hms.models.internal.medicalrecord.MedicalHistory;
 import com.example.hms.models.internal.medicalrecord.MedicalInfo;
+import com.example.hms.models.internal.medicalrecord.MedicalRecord;
 import com.example.hms.models.internal.medicalrecord.Patient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +33,7 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
     private final MedicalInfoMapper medicalInfoMapper;
+    private final MedicalRecordMapper medicalRecordMapper;
 
     @Override
     @Transactional
@@ -51,6 +58,29 @@ public class PatientServiceImpl implements PatientService {
 
         Patient savedPatient = patientRepository.save(patient);
         return patientMapper.toResponseDTO(savedPatient);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PatientWithLatestRecordDTO> getPatientsWithLatestMedicalRecord(int page, int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<Patient> patientsPage = patientRepository.findAllWithMedicalRecords(pageable);
+
+        return patientsPage.map(patient -> {
+            PatientWithLatestRecordDTO dto = new PatientWithLatestRecordDTO();
+
+            dto.setPatient(patientMapper.toResponseDTO(patient));
+
+            if (patient.getMedicalRecords() != null && !patient.getMedicalRecords().isEmpty()) {
+                patient.getMedicalRecords().stream()
+                        .max(Comparator.comparing(MedicalRecord::getCreatedAt))
+                        .ifPresent(latestRecord ->
+                                dto.setLatestMedicalRecord(medicalRecordMapper.toResponseDTO(latestRecord)));
+
+            }
+
+            return dto;
+        });
     }
 
     @Override

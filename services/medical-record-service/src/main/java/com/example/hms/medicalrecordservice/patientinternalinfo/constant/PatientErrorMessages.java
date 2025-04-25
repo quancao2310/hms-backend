@@ -12,7 +12,7 @@ public final class PatientErrorMessages {
     public static final String FULL_NAME_REQUIRED = "Full name is required";
     public static final String FULL_NAME_TOO_LONG = "Full name must be less than 100 characters";
     public static final String SSN_REQUIRED = "SSN is required";
-    public static final String SSN_INVALID_FORMAT = "SSN must be in format xxx-xx-xxxx or xxxxxxxxx";
+    public static final String SSN_INVALID_FORMAT = "SSN must be exactly 12 digits";
     public static final String DOB_REQUIRED = "Date of birth is required";
     public static final String DOB_PAST = "Date of birth must be in the past";
     public static final String SEX_REQUIRED = "Sex is required";

@@ -1,5 +1,6 @@
 package com.example.hms.medicalrecordservice.vaccination.controller;
 
+import com.example.hms.medicalrecordservice.common.constant.CommonErrorMessages;
 import com.example.hms.medicalrecordservice.patientinternalinfo.constant.PatientErrorMessages;
 import com.example.hms.medicalrecordservice.vaccination.constant.VaccinationErrorMessages;
 import com.example.hms.medicalrecordservice.vaccination.dto.VaccinationCreateRequestDTO;
@@ -51,7 +52,7 @@ public class VaccinationController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved vaccination"),
-            @ApiResponse(responseCode = "404", description = VaccinationErrorMessages.VACCINATION_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = VaccinationErrorMessages.VACCINATION_NOT_FOUND)
     })
     @GetMapping("/{vaccinationId}")
     public ResponseEntity<VaccinationResponseDTO> getVaccinationById(
@@ -68,7 +69,7 @@ public class VaccinationController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Vaccination created successfully"),
-            @ApiResponse(responseCode = "400", description = VaccinationErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = CommonErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
     })
     @PostMapping
     public ResponseEntity<VaccinationResponseDTO> createVaccination(

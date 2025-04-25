@@ -1,5 +1,6 @@
 package com.example.hms.medicalrecordservice.medicationhistory.controller;
 
+import com.example.hms.medicalrecordservice.common.constant.CommonErrorMessages;
 import com.example.hms.medicalrecordservice.medicationhistory.constant.MedicationHistoryErrorMessages;
 import com.example.hms.medicalrecordservice.medicationhistory.dto.MedicationHistoryCreateRequestDTO;
 import com.example.hms.medicalrecordservice.medicationhistory.dto.MedicationHistoryResponseDTO;
@@ -51,7 +52,7 @@ public class MedicationHistoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved medication history"),
-            @ApiResponse(responseCode = "404", description = MedicationHistoryErrorMessages.MEDICATION_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = MedicationHistoryErrorMessages.MEDICATION_HISTORY_NOT_FOUND)
     })
     @GetMapping("/{medicationHistoryId}")
     public ResponseEntity<MedicationHistoryResponseDTO> getMedicationHistoryById(
@@ -68,7 +69,7 @@ public class MedicationHistoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Medication history created successfully"),
-            @ApiResponse(responseCode = "400", description = MedicationHistoryErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = CommonErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
     })
     @PostMapping
     public ResponseEntity<MedicationHistoryResponseDTO> createMedicationHistory(

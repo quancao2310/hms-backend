@@ -4,6 +4,7 @@ import com.example.hms.medicalrecordservice.allergy.constant.AllergyErrorMessage
 import com.example.hms.medicalrecordservice.allergy.dto.AllergyCreateRequestDTO;
 import com.example.hms.medicalrecordservice.allergy.dto.AllergyResponseDTO;
 import com.example.hms.medicalrecordservice.allergy.service.AllergyService;
+import com.example.hms.medicalrecordservice.common.constant.CommonErrorMessages;
 import com.example.hms.medicalrecordservice.patientinternalinfo.constant.PatientErrorMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,7 +52,7 @@ public class AllergyController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved allergy"),
-            @ApiResponse(responseCode = "404", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
     })
     @GetMapping("/{allergyId}")
     public ResponseEntity<AllergyResponseDTO> getAllergyById(
@@ -68,7 +69,7 @@ public class AllergyController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Allergy created successfully"),
-            @ApiResponse(responseCode = "400", description = AllergyErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = CommonErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
     })
     @PostMapping
     public ResponseEntity<AllergyResponseDTO> createAllergy(

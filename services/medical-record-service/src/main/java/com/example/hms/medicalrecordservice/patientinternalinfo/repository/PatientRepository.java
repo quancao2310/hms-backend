@@ -1,6 +1,8 @@
 package com.example.hms.medicalrecordservice.patientinternalinfo.repository;
 
 import com.example.hms.models.internal.medicalrecord.Patient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +17,7 @@ public interface PatientRepository extends JpaRepository<Patient, UUID> {
             "LEFT JOIN FETCH p.medicalInfo " +
             "WHERE p.id = :id")
     Optional<Patient> findByIdWithMedicalInfo(@Param("id") UUID id);
+
+    @Query("SELECT DISTINCT p FROM Patient p LEFT JOIN FETCH p.medicalRecords")
+    Page<Patient> findAllWithMedicalRecords(Pageable pageable);
 }

@@ -22,7 +22,7 @@ public class PatientMutationRequestDTO {
     private String fullName;
 
     @NotBlank(message = PatientErrorMessages.SSN_REQUIRED)
-    @Pattern(regexp = "^\\d{9}$|^\\d{3}-\\d{2}-\\d{4}$", message = PatientErrorMessages.SSN_INVALID_FORMAT)
+    @Pattern(regexp = "^\\d{12}$", message = PatientErrorMessages.SSN_INVALID_FORMAT)
     private String ssn;
 
     @NotNull(message = PatientErrorMessages.DOB_REQUIRED)

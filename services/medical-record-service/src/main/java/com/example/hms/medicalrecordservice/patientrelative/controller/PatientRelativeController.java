@@ -33,7 +33,7 @@ public class PatientRelativeController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved relatives"),
-            @ApiResponse(responseCode = "404", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
     })
     @GetMapping
     public ResponseEntity<Page<PatientRelativeResponseDTO>> getPatientRelatives(
@@ -51,7 +51,7 @@ public class PatientRelativeController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved relative"),
-            @ApiResponse(responseCode = "404", description = PatientRelativeErrorMessages.PATIENT_RELATIVE_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientRelativeErrorMessages.PATIENT_RELATIVE_NOT_FOUND)
     })
     @GetMapping("/{relativeId}")
     public ResponseEntity<PatientRelativeResponseDTO> getPatientRelativeById(
@@ -68,7 +68,7 @@ public class PatientRelativeController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Relative created successfully"),
-            @ApiResponse(responseCode = "404", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
     })
     @PostMapping
     public ResponseEntity<PatientRelativeResponseDTO> createPatientRelative(
@@ -85,7 +85,7 @@ public class PatientRelativeController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Relative updated successfully"),
-            @ApiResponse(responseCode = "404", description = PatientRelativeErrorMessages.PATIENT_RELATIVE_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientRelativeErrorMessages.PATIENT_RELATIVE_NOT_FOUND)
     })
     @PutMapping("/{relativeId}")
     public ResponseEntity<PatientRelativeResponseDTO> updatePatientRelative(
@@ -104,7 +104,7 @@ public class PatientRelativeController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Relative deleted successfully"),
-            @ApiResponse(responseCode = "404", description = PatientRelativeErrorMessages.PATIENT_RELATIVE_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientRelativeErrorMessages.PATIENT_RELATIVE_NOT_FOUND)
     })
     @DeleteMapping("/{relativeId}")
     public ResponseEntity<Void> deletePatientRelative(
