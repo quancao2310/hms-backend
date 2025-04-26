@@ -3,6 +3,15 @@ spring:
     name: appointment-service
   config:
     import: optional:configserver:${CONFIG_SERVER_URI:http://localhost:8888}
+  servlet:
+    multipart:
+      max-file-size: 4096KB
+      max-request-size: 8192KB
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:}
+  api-key: ${CLOUDINARY_API_KEY:}
+  api-secret: ${CLOUDINARY_API_SECRET:}
 
 eureka:
   instance:
