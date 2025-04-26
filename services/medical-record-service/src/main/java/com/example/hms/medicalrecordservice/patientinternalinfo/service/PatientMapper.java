@@ -13,14 +13,12 @@ public interface PatientMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     Patient toEntity(PatientMutationRequestDTO request);
 
     PatientResponseDTO toResponseDTO(Patient patient);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "fullName", source = "patientInfo.fullName")
     @Mapping(target = "ssn", source = "patientInfo.ssn")
     @Mapping(target = "dateOfBirth", source = "patientInfo.dateOfBirth")

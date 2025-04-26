@@ -11,8 +11,6 @@ import org.mapstruct.MappingConstants;
 public interface MedicalRecordMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "patient.id", source = "patientId")
-    @Mapping(target = "doctor.id", source = "doctorId")
     @Mapping(target = "createdAt", ignore = true)
     MedicalRecord toEntity(MedicalRecordMutationRequestDTO request);
 
