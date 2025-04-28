@@ -87,7 +87,15 @@ public class PatientServiceImpl implements PatientService {
     @Transactional(readOnly = true)
     public PatientResponseDTO getPatientById(UUID id) {
         Patient patient = patientRepository.findByIdWithMedicalInfo(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(PatientErrorMessages.PATIENT_NOT_FOUND, id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID, id)));
+        return patientMapper.toResponseDTO(patient);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PatientResponseDTO getPatientBySsn(String ssn) {
+        Patient patient = patientRepository.findBySsnWithMedicalInfo(ssn)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(PatientErrorMessages.PATIENT_NOT_FOUND_WITH_SSN, ssn)));
         return patientMapper.toResponseDTO(patient);
     }
 
@@ -95,7 +103,7 @@ public class PatientServiceImpl implements PatientService {
     @Transactional
     public PatientResponseDTO updatePatient(UUID id, PatientMutationRequestDTO request) {
         Patient existingPatient = patientRepository.findByIdWithMedicalInfo(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(PatientErrorMessages.PATIENT_NOT_FOUND, id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID, id)));
 
         if (!existingPatient.getSsn().equals(request.getSsn()) &&
                 patientRepository.existsBySsn(request.getSsn())) {
@@ -120,6 +128,6 @@ public class PatientServiceImpl implements PatientService {
     @Transactional(readOnly = true)
     public Patient getPatientEntityById(UUID id) {
         return patientRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException(String.format(PatientErrorMessages.PATIENT_NOT_FOUND, id)));
+                () -> new ResourceNotFoundException(String.format(PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID, id)));
     }
 }

@@ -34,7 +34,7 @@ public class AllergyController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved allergies"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @GetMapping
     public ResponseEntity<Page<AllergyResponseDTO>> getPatientAllergies(
@@ -52,7 +52,7 @@ public class AllergyController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved allergy"),
-            @ApiResponse(responseCode = "400", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
     })
     @GetMapping("/{allergyId}")
     public ResponseEntity<AllergyResponseDTO> getAllergyById(
@@ -69,7 +69,7 @@ public class AllergyController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Allergy created successfully"),
-            @ApiResponse(responseCode = "400", description = CommonErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = CommonErrorMessages.MEDICAL_HISTORY_NOT_FOUND)
     })
     @PostMapping
     public ResponseEntity<AllergyResponseDTO> createAllergy(
@@ -86,7 +86,7 @@ public class AllergyController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Allergy updated successfully"),
-            @ApiResponse(responseCode = "400", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
     })
     @PutMapping("/{allergyId}")
     public ResponseEntity<AllergyResponseDTO> updateAllergy(
@@ -105,7 +105,7 @@ public class AllergyController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Allergy deleted successfully"),
-            @ApiResponse(responseCode = "400", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = AllergyErrorMessages.ALLERGY_NOT_FOUND)
     })
     @DeleteMapping("/{allergyId}")
     public ResponseEntity<Void> deleteAllergy(

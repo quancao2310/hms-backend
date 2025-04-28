@@ -13,8 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +33,7 @@ public class MedicalRecordController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved medical records"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @GetMapping
     public ResponseEntity<Page<MedicalRecordResponseDTO>> getPatientMedicalRecords(
@@ -70,7 +68,7 @@ public class MedicalRecordController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Medical record created successfully"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @PostMapping
     public ResponseEntity<MedicalRecordResponseDTO> createMedicalRecord(

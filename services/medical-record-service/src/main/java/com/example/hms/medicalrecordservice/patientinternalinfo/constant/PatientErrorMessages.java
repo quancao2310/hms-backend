@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PatientErrorMessages {
     public static final String PATIENT_INFORMATION_REQUIRED = "Patient information is required";
-    public static final String PATIENT_NOT_FOUND = "Patient not found with ID: %s";
+    public static final String PATIENT_NOT_FOUND_WITH_ID = "Patient not found with ID: %s";
+    public static final String PATIENT_NOT_FOUND_WITH_SSN = "Patient not found with SSN: %s";
     public static final String PATIENT_SSN_ALREADY_EXISTS = "SSN is already registered";
 
     public static final String FULL_NAME_REQUIRED = "Full name is required";

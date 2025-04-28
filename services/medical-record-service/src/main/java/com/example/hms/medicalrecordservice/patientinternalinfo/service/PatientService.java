@@ -13,6 +13,7 @@ public interface PatientService {
     PatientResponseDTO createPatient(PatientCreateRequestDTO request);
     Page<PatientWithLatestRecordDTO> getPatientsWithLatestMedicalRecord(int page, int size);
     PatientResponseDTO getPatientById(UUID id);
+    PatientResponseDTO getPatientBySsn(String ssn);
     PatientResponseDTO updatePatient(UUID id, PatientMutationRequestDTO request);
 
     Patient getPatientEntityById(UUID id);

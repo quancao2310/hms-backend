@@ -1,9 +1,6 @@
 package com.example.hms.medicalrecordservice.patientinternalinfo.controller;
 
 import com.example.hms.medicalrecordservice.common.constant.CommonErrorMessages;
-import com.example.hms.medicalrecordservice.medicalinfo.constant.MedicalInfoErrorMessages;
-import com.example.hms.medicalrecordservice.medicalinfo.dto.MedicalInfoMutationRequestDTO;
-import com.example.hms.medicalrecordservice.medicalinfo.dto.MedicalInfoResponseDTO;
 import com.example.hms.medicalrecordservice.medicalinfo.service.MedicalInfoService;
 import com.example.hms.medicalrecordservice.patientinternalinfo.constant.PatientErrorMessages;
 import com.example.hms.medicalrecordservice.patientinternalinfo.dto.PatientCreateRequestDTO;
@@ -77,7 +74,7 @@ public class PatientController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved patient"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @GetMapping("/{id}")
     public ResponseEntity<PatientResponseDTO> getPatientById(
@@ -88,12 +85,28 @@ public class PatientController {
     }
 
     @Operation(
+            summary = "Get patient by SSN",
+            description = "Retrieves a patient by their Social Security Number (SSN)"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved patient"),
+            @ApiResponse(responseCode = "404", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_SSN)
+    })
+    @GetMapping("/ssn/{ssn}")
+    public ResponseEntity<PatientResponseDTO> getPatientBySsn(
+            @Parameter(description = "Patient SSN", required = true) @PathVariable String ssn
+    ) {
+        PatientResponseDTO patient = patientService.getPatientBySsn(ssn);
+        return ResponseEntity.ok(patient);
+    }
+
+    @Operation(
             summary = "Update patient information",
             description = "Updates an existing patient's information"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Patient updated successfully"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "404", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @PutMapping("/{id}")
     public ResponseEntity<PatientResponseDTO> updatePatient(

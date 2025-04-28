@@ -34,7 +34,7 @@ public class MedicationHistoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved medication histories"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @GetMapping
     public ResponseEntity<Page<MedicationHistoryResponseDTO>> getPatientMedicationHistories(

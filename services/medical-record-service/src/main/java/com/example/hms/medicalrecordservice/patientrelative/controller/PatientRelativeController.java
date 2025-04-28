@@ -33,7 +33,7 @@ public class PatientRelativeController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved relatives"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @GetMapping
     public ResponseEntity<Page<PatientRelativeResponseDTO>> getPatientRelatives(
@@ -68,7 +68,7 @@ public class PatientRelativeController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Relative created successfully"),
-            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND)
+            @ApiResponse(responseCode = "400", description = PatientErrorMessages.PATIENT_NOT_FOUND_WITH_ID)
     })
     @PostMapping
     public ResponseEntity<PatientRelativeResponseDTO> createPatientRelative(
