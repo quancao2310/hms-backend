@@ -26,6 +26,22 @@ public class DoctorTimeSlotController {
     private final DoctorTimeSlotService doctorTimeSlotService;
     private final AppointmentTimeSlotService appointmentTimeSlotService;
 
+    @GetMapping("/{doctorId}/timeslots")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = DoctorTimeSlotDTO.class))
+                    )
+            )
+    })
+    public ResponseEntity<?> getTimeSlotsByDoctorId(@PathVariable UUID doctorId) {
+        return ResponseEntity.ok(doctorTimeSlotService.getTimeSlotsForDoctor(doctorId));
+    }
+
     @PostMapping()
     @ApiResponses(value = {
             @ApiResponse(
@@ -89,7 +105,7 @@ public class DoctorTimeSlotController {
 
 
 
-    @GetMapping("/{id}/doctors")
+    @GetMapping("/{timeSlotId}/doctors")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -101,8 +117,8 @@ public class DoctorTimeSlotController {
                     )
             )
     })
-    public ResponseEntity<?> getAvailableDoctorByTimeSlot(@PathVariable UUID id){
-        return ResponseEntity.ok(doctorTimeSlotService.getAvailableDoctorByTimeSlot(id));
+    public ResponseEntity<?> getAvailableDoctorByTimeSlot(@PathVariable UUID timeSlotId){
+        return ResponseEntity.ok(doctorTimeSlotService.getAvailableDoctorByTimeSlot(timeSlotId));
     }
 
     @PostMapping("/delete")

@@ -67,7 +67,7 @@ public class AppointmentTimeSlotServiceImpl implements AppointmentTimeSlotServic
                         .reason(createAppointmentRequestDTO.getReason())
                         .note(createAppointmentRequestDTO.getNotes())
                         .timeSlot(timeSlotService.getTimeSlotById(createAppointmentRequestDTO.getTimeSlotId()))
-                        .patientAccountId(createAppointmentRequestDTO.getPatientAccountId())
+                        .patientSsn(createAppointmentRequestDTO.getPatientSsn())
                         .build()
         );
     }

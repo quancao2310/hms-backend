@@ -14,5 +14,5 @@ public class CreateAppointmentRequestDTO {
     private String reason;
     private List<String> notes;
     private UUID timeSlotId;
-    private UUID patientAccountId;
+    private String patientSsn;
 }

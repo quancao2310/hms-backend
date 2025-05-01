@@ -1,5 +1,6 @@
 package com.example.hms.appointmentservice.services.impl;
 
+import com.example.hms.appointmentservice.dtos.AppointmentInfoDTO;
 import com.example.hms.appointmentservice.dtos.CreateAppointmentRequestDTO;
 import com.example.hms.appointmentservice.dtos.SearchRequestDTO;
 import com.example.hms.appointmentservice.repositories.AppointmentRepository;
@@ -149,5 +150,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getAppointmentByTimeSlots(List<TimeSlot> timeSlots) {
         return appointmentRepository.findByTimeSlotIn(timeSlots);
+    }
+
+    @Override
+    public List<AppointmentInfoDTO> getAppointmentInfoByTimeSlotAndDoctor(TimeSlot timeSlot, Doctor doctor) {
+        return appointmentRepository.findAppointmentInfoByTimeSlotAndDoctor(timeSlot, doctor);
     }
 }

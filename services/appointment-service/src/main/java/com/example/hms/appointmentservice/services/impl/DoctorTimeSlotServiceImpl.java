@@ -1,12 +1,10 @@
 package com.example.hms.appointmentservice.services.impl;
 
-import com.example.hms.appointmentservice.dtos.CreateDoctorTimeSlotRequestDTO;
-import com.example.hms.appointmentservice.dtos.CreateBulkDoctorTimeSlotRequestDTO;
-import com.example.hms.appointmentservice.dtos.ModifyMaxAppointmentForDoctorRequestDTO;
-import com.example.hms.appointmentservice.dtos.DistributeTimeSlotForDoctorRequestDTO;
+import com.example.hms.appointmentservice.dtos.*;
 import com.example.hms.appointmentservice.repositories.DoctorTimeSlotRepository;
 import com.example.hms.appointmentservice.services.*;
 import com.example.hms.enums.AppointmentStatus;
+import com.example.hms.models.internal.appointment.Appointment;
 import com.example.hms.models.internal.appointment.DoctorTimeSlot;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Admin;
@@ -175,5 +173,29 @@ public class DoctorTimeSlotServiceImpl implements DoctorTimeSlotService {
     @Override
     public List<DoctorTimeSlot> getDoctorTimeSlotsByTimeSlot(TimeSlot timeSlot) {
         return doctorTimeSlotRepository.findByTimeSlot(timeSlot);
+    }
+
+    @Override
+    public List<DoctorTimeSlotDTO> getTimeSlotsForDoctor(UUID doctorId) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        List<DoctorTimeSlot> doctorTimeSlots = doctorTimeSlotRepository.findByDoctor(doctor);
+        List<DoctorTimeSlotDTO> doctorTimeSlotDTOS = new ArrayList<>();
+
+        for (DoctorTimeSlot doctorTimeSlot : doctorTimeSlots) {
+            List<AppointmentInfoDTO> appointmentInfoDTOSs = appointmentService
+                    .getAppointmentInfoByTimeSlotAndDoctor(
+                            doctorTimeSlot.getTimeSlot(), doctor);
+
+            doctorTimeSlotDTOS.add(
+                    new DoctorTimeSlotDTO(doctorTimeSlot.getId(),
+                            doctorTimeSlot.getMaxAppointment(),
+                            doctorTimeSlot.getTimeSlot(),
+                            doctorTimeSlot.getDoctor(),
+                            doctorTimeSlot.getAssignedBy(),
+                            appointmentInfoDTOSs)
+            );
+        }
+
+        return doctorTimeSlotDTOS;
     }
 }

@@ -47,7 +47,8 @@ public class Appointment {
     @JoinColumn(name = "timeslot_id")
     private TimeSlot timeSlot;
 
-    private UUID patientAccountId;
+//    private UUID patientAccountId;
+    private String patientSsn;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
