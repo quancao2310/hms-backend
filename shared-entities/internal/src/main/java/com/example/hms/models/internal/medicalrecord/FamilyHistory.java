@@ -24,6 +24,9 @@ public class FamilyHistory {
     @Column(columnDefinition = "TEXT")
     private String condition;
 
+    @Column(columnDefinition = "TEXT")
+    private String notes;
+
     @ManyToOne
     @JoinColumn(name = "medical_history_id")
     private MedicalHistory medicalHistory;

@@ -53,11 +53,14 @@ public class Patient {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private List<PatientRelative> relatives;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "medical_info_id")
     private MedicalInfo medicalInfo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "medical_history_id")
     private MedicalHistory medicalHistory;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<MedicalRecord> medicalRecords;
 }

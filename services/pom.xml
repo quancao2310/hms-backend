@@ -38,6 +38,7 @@
         <module>patient-facing-service</module>
         <module>staff-service</module>
         <module>appointment-service</module>
+        <module>medical-record-service</module>
     </modules>
 
     <dependencies>

@@ -25,7 +25,7 @@ public class SurgicalHistory {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medical_history_id")
     private MedicalHistory medicalHistory;
 }
