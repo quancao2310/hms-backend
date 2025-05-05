@@ -64,10 +64,20 @@ public class AppointmentController {
                         .getDoctorId()));
     }
 
-//    @GetMapping("{id}")
-//    public ResponseEntity<?> getAppointmentById(@PathVariable UUID id) {
-//        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
-//    }
+    @GetMapping("{id}/detail")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Appointment.class)
+                    )
+            )
+    })
+    public ResponseEntity<?> getAppointmentById(@PathVariable UUID id) {
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+    }
 
     @GetMapping()
     public Page<Appointment> searchAppointment(@SearchParams SearchRequestDTO request) {

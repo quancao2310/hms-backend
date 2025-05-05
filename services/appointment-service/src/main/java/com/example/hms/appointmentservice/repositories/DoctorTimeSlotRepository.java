@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface DoctorTimeSlotRepository extends JpaRepository<DoctorTimeSlot, UUID> {
     List<DoctorTimeSlot> findByTimeSlot(TimeSlot timeSlot);
     Optional<DoctorTimeSlot> findByDoctor_IdAndTimeSlot_Id(UUID doctorId, UUID timeSlotId);
+    List<DoctorTimeSlot> findByDoctor(Doctor doctor);
 }

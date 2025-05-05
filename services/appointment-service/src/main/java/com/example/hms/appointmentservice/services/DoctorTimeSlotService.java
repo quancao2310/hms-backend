@@ -1,9 +1,6 @@
 package com.example.hms.appointmentservice.services;
 
-import com.example.hms.appointmentservice.dtos.CreateDoctorTimeSlotRequestDTO;
-import com.example.hms.appointmentservice.dtos.CreateBulkDoctorTimeSlotRequestDTO;
-import com.example.hms.appointmentservice.dtos.ModifyMaxAppointmentForDoctorRequestDTO;
-import com.example.hms.appointmentservice.dtos.DistributeTimeSlotForDoctorRequestDTO;
+import com.example.hms.appointmentservice.dtos.*;
 import com.example.hms.models.internal.appointment.DoctorTimeSlot;
 import com.example.hms.models.internal.appointment.TimeSlot;
 import com.example.hms.models.internal.staff.Doctor;
@@ -21,4 +18,5 @@ public interface DoctorTimeSlotService {
     Optional<DoctorTimeSlot> getDoctorTimeSlotById(UUID doctorId, UUID timeSlotId);
     void removeDoctorTimeSlots(List<DoctorTimeSlot> doctorTimeSlots);
     List<DoctorTimeSlot> getDoctorTimeSlotsByTimeSlot(TimeSlot timeSlot);
+    List<DoctorTimeSlotDTO> getTimeSlotsForDoctor(UUID doctorId);
 }

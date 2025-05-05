@@ -1,5 +1,6 @@
 package com.example.hms.appointmentservice.services;
 
+import com.example.hms.appointmentservice.dtos.AppointmentInfoDTO;
 import com.example.hms.appointmentservice.dtos.SearchRequestDTO;
 import com.example.hms.enums.AppointmentStatus;
 import com.example.hms.models.internal.appointment.Appointment;
@@ -28,4 +29,5 @@ public interface AppointmentService {
     Appointment saveAppointment(Appointment appointment);
     List<Appointment> getAppointmentByTimeSlot(TimeSlot timeSlot);
     List<Appointment> getAppointmentByTimeSlots(List<TimeSlot> timeSlots);
+    List<AppointmentInfoDTO> getAppointmentInfoByTimeSlotAndDoctor(TimeSlot timeSlot, Doctor doctor);
 }
