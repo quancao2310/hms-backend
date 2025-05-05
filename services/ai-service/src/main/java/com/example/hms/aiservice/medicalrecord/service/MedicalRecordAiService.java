@@ -22,13 +22,13 @@ public interface MedicalRecordAiService {
         Be concise, clear, and professional.
         """)
     TreatmentSuggestionDTO suggestTreatment(
-            @UserMessage("""
-                    Based on the following symptoms and diagnoses, suggest appropriate treatments:
-                    
-                    Symptoms: {{symptoms}}
-                    Diagnoses: {{diagnoses}}
-                    
-                    """)
-            DiagnosesInfoDTO diagnosesInfo
+        @UserMessage("""
+            Based on the following symptoms and diagnoses, suggest appropriate treatments:
+            
+            Symptoms: {{symptoms}}
+            Diagnoses: {{diagnoses}}
+            
+            """)
+        DiagnosesInfoDTO diagnosesInfo
     );
 }
