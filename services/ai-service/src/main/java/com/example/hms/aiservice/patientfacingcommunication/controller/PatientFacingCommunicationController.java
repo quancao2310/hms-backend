@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/ai/patient-communication")
 @RequiredArgsConstructor
@@ -68,8 +70,8 @@ public class PatientFacingCommunicationController {
     })
     @PostMapping("/chat/{patientId}")
     public ResponseEntity<String> chatWithAssistant(
-            @Parameter(description = "Patient's unique identifier", example = "123456", required = true)
-            @PathVariable Long patientId,
+            @Parameter(description = "Patient's unique identifier", example = "123e4567-e89b-12d3-a456-426614174000", required = true)
+            @PathVariable UUID patientId,
 
             @Parameter(description = "Patient's message to the AI assistant")
             @RequestBody String message

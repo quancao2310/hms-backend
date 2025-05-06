@@ -7,6 +7,8 @@ import dev.langchain4j.service.memory.ChatMemoryAccess;
 import dev.langchain4j.service.spring.AiService;
 import dev.langchain4j.service.spring.AiServiceWiringMode;
 
+import java.util.UUID;
+
 @AiService(
         wiringMode = AiServiceWiringMode.EXPLICIT,
         chatModel = "patientFacingCommunicationAiChatModel",
@@ -32,7 +34,7 @@ public interface PatientFacingCommunicationAiService extends ChatMemoryAccess {
         Your goal is to be a helpful companion on the patient's healthcare journey.
         """)
     String assistPatient(
-            @MemoryId Long patientId,
+            @MemoryId UUID patientId,
             @UserMessage String userMessage
     );
 }
