@@ -26,7 +26,7 @@ import java.util.UUID;
 @Slf4j
 public class InternalDocumentServiceImpl implements InternalDocumentService {
 
-    private final EmbeddingStoreIngestor documentEmbeddingStoreIngestor;
+    private final EmbeddingStoreIngestor internalDocumentEmbeddingStoreIngestor;
 
     @Value("${DOCUMENT_MAX_SIZE_MB:10}")
     private Long maxFileSizeMB;
@@ -94,7 +94,7 @@ public class InternalDocumentServiceImpl implements InternalDocumentService {
     }
 
     private void storeEmbeddings(Document document) {
-        IngestionResult ingestionResult = documentEmbeddingStoreIngestor.ingest(document);
+        IngestionResult ingestionResult = internalDocumentEmbeddingStoreIngestor.ingest(document);
         log.info("Token usage: {}", ingestionResult.tokenUsage());
     }
 }
